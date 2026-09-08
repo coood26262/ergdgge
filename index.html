@@ -1,187 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Venmo x Playful Rewards</title>
-<meta name="description" content="Earn a $750 Venmo reward through Playful Rewards. Install, play games, cash out.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style>*{-webkit-tap-highlight-color:transparent}a,button{touch-action:manipulation;cursor:pointer}</style>
-
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{margin:0;font-family:'Inter','Segoe UI',system-ui,sans-serif;color:#fff;background:#0a0a0f;-webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}
-@media(min-height:700px){.rc-card{animation:cardFloat 6s ease-in-out infinite}}
-@keyframes cardFloat{0%,100%{transform:rotateX(2deg) translateY(0)}50%{transform:rotateX(2deg) translateY(-3px)}}
-@media(prefers-reduced-motion:reduce){.rc-card{animation:none}}
-@media(max-width:380px){.hero-title{font-size:24px!important}.rc-card{max-width:280px!important}}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#008CFF" />
+  <meta name="description" content="Earn rewards with Playful and cash out to Venmo." />
+  <title>Venmo × Playful — Earn rewards</title>
+  <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/8/84/Venmo_logo.png" />
+  <style>
+    :root {
+      --blue: #008CFF;
+      --blue-soft: rgba(0, 140, 255, .12);
+      --ink: #050810;
+      --panel: #101318;
+      --muted: rgba(255,255,255,.56);
+      --line: rgba(255,255,255,.10);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100%; -webkit-text-size-adjust: 100%; }
+    body {
+      color: #fff;
+      background: var(--ink);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    button { font: inherit; }
+    .page { min-height: 100vh; position: relative; isolation: isolate; overflow: hidden; }
+    .page::before {
+      content: ""; position: absolute; inset: 0; z-index: -2; pointer-events: none;
+      background: radial-gradient(circle at 50% -8%, rgba(0,140,255,.20), transparent 34%),
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: auto, 34px 34px, 34px 34px;
+      mask-image: linear-gradient(to bottom, black, transparent 78%);
+    }
+    .blob { position: absolute; z-index: -1; border-radius: 999px; filter: blur(1px); pointer-events: none; opacity: .8; }
+    .blob-one { width: 180px; height: 180px; right: -90px; top: 145px; background: var(--blue); opacity: .11; }
+    .blob-two { width: 130px; height: 130px; left: -74px; top: 510px; border: 1px solid rgba(0,140,255,.30); transform: rotate(19deg); }
+    .top-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--line); background: rgba(5,8,16,.82); backdrop-filter: blur(14px); position: sticky; top: 0; z-index: 20; }
+    .brand { display: flex; align-items: center; gap: 9px; min-width: 0; }
+    .brand img { height: 22px; width: auto; object-fit: contain; }
+    .brand-name { font-size: 15px; font-weight: 800; letter-spacing: -.02em; white-space: nowrap; }
+    .brand-name small { display: block; color: var(--blue); font-size: 9px; letter-spacing: .14em; text-transform: uppercase; margin-top: 2px; }
+    .timer { display: flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: rgba(255,255,255,.06); border-radius: 999px; padding: 7px 10px; color: var(--muted); font-size: 11px; white-space: nowrap; }
+    .timer strong { color: #fff; font-variant-numeric: tabular-nums; }
+    main { max-width: 520px; margin: 0 auto; padding: 38px 20px 150px; }
+    .hero { text-align: center; }
+    .logo-pair { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 22px; }
+    .logo-pair .venmo-logo { height: 44px; width: auto; object-fit: contain; padding: 12px 16px; background: #fff; border-radius: 16px; box-shadow: 0 0 0 5px rgba(0,140,255,.12), 0 12px 26px rgba(0,0,0,.35); }
+    .logo-pair .playful-logo { width: 70px; height: 70px; border-radius: 20px; object-fit: cover; box-shadow: 0 0 0 5px rgba(255,255,255,.06), 0 12px 26px rgba(0,0,0,.35); }
+    .plus { color: var(--blue); font-size: 22px; font-weight: 900; }
+    .eyebrow { color: var(--blue); font-size: 11px; font-weight: 900; letter-spacing: .18em; text-transform: uppercase; margin-bottom: 11px; }
+    h1 { font-size: clamp(34px, 9vw, 50px); line-height: .98; letter-spacing: -.065em; font-weight: 950; }
+    h1 em { color: var(--blue); font-style: normal; }
+    .lede { max-width: 395px; margin: 18px auto 0; color: var(--muted); font-size: 15px; line-height: 1.55; }
+    .offer { position: relative; margin: 30px auto 0; overflow: hidden; display: flex; align-items: center; gap: 14px; padding: 18px; border: 1px solid rgba(0,140,255,.48); border-radius: 24px; background: linear-gradient(125deg, rgba(0,140,255,.18), rgba(0,140,255,.035) 60%, rgba(255,255,255,.04)); box-shadow: 0 18px 48px rgba(0,0,0,.22); text-align: left; }
+    .offer::after { content: ""; position: absolute; width: 160px; height: 160px; top: -100px; right: -60px; border: 1px solid rgba(0,140,255,.28); border-radius: 50%; }
+    .offer-icon { width: 62px; height: 62px; border-radius: 17px; background: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 12px; }
+    .offer-icon img { width: 100%; height: auto; object-fit: contain; }
+    .offer-copy { min-width: 0; flex: 1; }
+    .offer-label { color: var(--blue); font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: .16em; margin-bottom: 5px; }
+    .offer-title { font-size: 17px; font-weight: 850; letter-spacing: -.02em; }
+    .offer-sub { margin-top: 3px; color: var(--muted); font-size: 12px; }
+    .amount { position: relative; z-index: 1; text-align: right; flex-shrink: 0; }
+    .amount strong { display: block; color: var(--blue); font-size: 25px; letter-spacing: -.06em; }
+    .amount span { color: rgba(255,255,255,.44); font-size: 9px; font-weight: 800; letter-spacing: .12em; }
+    .section-kicker { margin: 28px 0 16px; color: rgba(255,255,255,.35); font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    .steps { margin-top: 0; text-align: left; }
+    .step { display: flex; gap: 16px; padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,.06); }
+    .step:last-child { border-bottom: 0; }
+    .step-number { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; flex-shrink: 0; border: 1px solid rgba(0,140,255,.25); border-radius: 12px; color: var(--blue); background: rgba(0,140,255,.12); font-size: 16px; font-weight: 800; }
+    .step h2 { color: #fff; font-size: 15px; line-height: 1.25; letter-spacing: -.02em; }
+    .step p { margin-top: 4px; color: rgba(255,255,255,.45); font-size: 13px; line-height: 1.5; }
+    .step-note { display: inline-block; margin-top: 6px; padding: 2px 8px; border-radius: 6px; color: var(--blue); background: rgba(0,140,255,.15); font-size: 11px; font-weight: 700; line-height: 1.25; }
+    .proof { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 25px 0 0; color: rgba(255,255,255,.46); font-size: 12px; }
+    .stars { color: var(--blue); letter-spacing: 2px; font-size: 15px; }
+    .stories { margin-top: 42px; }
+    .stories .section-kicker { margin: 0 0 10px; color: var(--blue); }
+    .stories-title { margin-bottom: 20px; color: #fff; font-size: clamp(30px, 8vw, 42px); line-height: .98; letter-spacing: -.06em; font-weight: 950; }
+    .story-list { display: grid; gap: 13px; }
+    .story-card { padding: 20px; border: 1px solid rgba(255,255,255,.13); border-radius: 22px; background: rgba(16,19,24,.90); box-shadow: 0 10px 28px rgba(0,0,0,.16); }
+    .story-head { display: flex; align-items: center; gap: 11px; }
+    .story-avatar { display: flex; align-items: center; justify-content: center; width: 43px; height: 43px; flex-shrink: 0; border: 1px solid rgba(0,140,255,.42); border-radius: 50%; color: var(--blue); background: rgba(0,140,255,.10); font-size: 13px; font-weight: 950; }
+    .story-name { color: #fff; font-size: 15px; font-weight: 850; }
+    .story-tier { margin-top: 3px; color: var(--muted); font-size: 11px; }
+    .story-stars { margin-left: auto; color: #ffc247; font-size: 13px; letter-spacing: 1px; white-space: nowrap; }
+    .story-quote { margin-top: 16px; color: rgba(255,255,255,.62); font-size: 14px; line-height: 1.5; }
+    .cta-wrap { position: fixed; z-index: 15; right: 0; bottom: 0; left: 0; padding: 14px 20px 22px; background: linear-gradient(to top, var(--ink) 62%, transparent); pointer-events: none; }
+    .cta { display: flex; align-items: center; justify-content: center; gap: 9px; max-width: 480px; width: 100%; margin: 0 auto; padding: 19px 22px; border: 0; border-radius: 17px; color: #fff; background: var(--blue); box-shadow: 0 0 35px rgba(0,140,255,.34); cursor: pointer; font-size: 17px; font-weight: 950; letter-spacing: -.02em; pointer-events: auto; transition: transform .15s, filter .15s; text-decoration: none; }
+    .cta:hover { filter: brightness(1.07); }
+    .cta:active { transform: scale(.98); }
+    .notif-zone { position: fixed; z-index: 30; top: 70px; left: 50%; width: min(calc(100% - 40px), 360px); transform: translateX(-50%); pointer-events: none; }
+    .toast { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; padding: 11px 13px; border: 1px solid rgba(255,255,255,.12); border-radius: 15px; background: rgba(16,19,24,.92); box-shadow: 0 10px 34px rgba(0,0,0,.42); backdrop-filter: blur(15px); animation: toast-in .4s cubic-bezier(.16,1,.3,1) both; }
+    .toast.out { animation: toast-out .28s ease forwards; }
+    .toast .toast-icon { width: 34px; height: 34px; border-radius: 10px; background: #fff; display: flex; align-items: center; justify-content: center; padding: 6px; flex-shrink: 0; }
+    .toast .toast-icon img { width: 100%; height: auto; object-fit: contain; }
+    .toast strong { display: block; font-size: 12px; }
+    .toast span { display: block; margin-top: 2px; color: var(--muted); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    @keyframes toast-in { from { opacity: 0; transform: translateY(-18px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes toast-out { to { opacity: 0; transform: translateY(-10px) scale(.96); } }
+    @media (max-width: 380px) { .top-bar { padding-inline: 14px; } .timer { font-size: 10px; padding-inline: 8px; } main { padding-inline: 16px; } .offer { padding: 15px; gap: 10px; } .amount strong { font-size: 21px; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+  </style>
 </head>
 <body>
+  <div class="page">
+    <div class="blob blob-one"></div><div class="blob blob-two"></div>
+    <div class="top-bar">
+      <div class="brand"><img src="https://upload.wikimedia.org/wikipedia/commons/8/84/Venmo_logo.png" alt="Venmo" /><div class="brand-name">Venmo</div></div>
+      <div class="timer" aria-label="Bonus countdown">◷ <span>Bonus ends</span> <strong id="countdown">30:00</strong></div>
+    </div>
 
-<div id="lander" style="min-height:100vh;background:#0a0a0f">
+    <div class="notif-zone" id="notifZone" aria-live="polite"></div>
+    <main>
+      <section class="hero">
+        <div class="logo-pair">
+          <img class="venmo-logo" src="https://upload.wikimedia.org/wikipedia/commons/8/84/Venmo_logo.png" alt="Venmo logo" />
+          <span class="plus">×</span>
+          <img class="playful-logo" src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/6b/ce/a9/6bcea910-1e83-9281-54d6-c7f77b1f0fdb/Placeholder.mill/400x400bb-75.webp" alt="Playful logo" />
+        </div>
+        <div class="eyebrow">Cash out with Venmo</div>
+        <h1>Get <em>$700</em><br />To Your Venmo</h1>
+        <p class="lede">Install Playful, knock out a few fun starter offers, then unlock rewards you can cash out to Venmo.</p>
+      </section>
 
-<!-- Collab bar -->
-<div style="display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;border-bottom:1px solid rgba(255,255,255,0.06)">
-<img src="https://upload.wikimedia.org/wikipedia/commons/8/84/Venmo_logo.png" alt="Venmo" style="height:16px;width:auto;object-fit:contain">
-<span style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.4)">x</span>
-<span style="font-size:12px;font-weight:700;color:#fff">Playful Rewards</span>
-<span style="display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;color:#008CFF"><svg width="10" height="10" viewBox="0 0 16 16" fill="#008CFF"><path d="M8 1a2 2 0 012 2v4H6V3a2 2 0 012-2zm3 6V3a3 3 0 00-6 0v4a2 2 0 00-2 2v5a2 2 0 002 2h6a2 2 0 002-2V9a2 2 0 00-2-2z"/></svg> Secured</span>
-</div>
+      <section class="offer" aria-label="Venmo payout offer">
+        <div class="offer-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/8/84/Venmo_logo.png" alt="Venmo payout" /></div>
+        <div class="offer-copy"><div class="offer-label">Only 194 left</div><div class="offer-title">Venmo payout</div><div class="offer-sub">Unlock with 2 quick Playful activities</div></div>
+        <div class="amount"><strong>$700</strong><span>MAX REWARD</span></div>
+      </section>
 
-<!-- Hero -->
-<div style="padding:18px 20px 0;text-align:center;max-width:520px;margin:0 auto">
-<h1 class="hero-title" style="font-size:26px;font-weight:800;line-height:1.15;margin:0 0 14px">Your <span style="color:#008CFF">$750</span> Venmo Reward</h1>
+      <div class="section-kicker">Here's how it works — 3 steps</div>
+      <section class="steps">
+        <div class="step"><span class="step-number">1</span><div><h2>Install the Playful app</h2><p>Free for iOS &amp; Android. Create an account in under 30 seconds.</p><span class="step-note">✓ Always free</span></div></div>
+        <div class="step"><span class="step-number">2</span><div><h2>Complete 2 quick starter activities</h2><p>This unlocks the Venmo payout. It usually only takes a few minutes.</p><span class="step-note">⚡ Average less than 5 min.</span></div></div>
+        <div class="step"><span class="step-number">3</span><div><h2>Unlock &amp; earn Venmo</h2><p>Complete the final activity and collect your reward. Cash out via Venmo, PayPal, Visa, or gift cards.</p><span class="step-note">💸 Up to $700 paid out</span></div></div>
+      </section>
+      <div class="proof"><span class="stars">★★★★★</span><span>4.8 from 50,000+ reward hunters</span></div>
+      <section class="stories" aria-labelledby="stories-title">
+        <div class="section-kicker">Player stories</div>
+        <h2 class="stories-title" id="stories-title">What members<br />are saying</h2>
+        <div class="story-list">
+          <article class="story-card"><div class="story-head"><div class="story-avatar">MR</div><div><div class="story-name">Maya R.</div><div class="story-tier">Plus tier</div></div><div class="story-stars">★★★★★</div></div><p class="story-quote">"Cashed out $527 in my first week just playing games. It took 5 minutes to set everything up."</p></article>
+          <article class="story-card"><div class="story-head"><div class="story-avatar">JT</div><div><div class="story-name">Jordan T.</div><div class="story-tier">Pro tier</div></div><div class="story-stars">★★★★★</div></div><p class="story-quote">"The money hit my Venmo the same day, and I get better games with higher rewards too."</p></article>
+          <article class="story-card"><div class="story-head"><div class="story-avatar">SL</div><div><div class="story-name">Sophia L.</div><div class="story-tier">Plus tier</div></div><div class="story-stars">★★★★★</div></div><p class="story-quote">"Way more legit than the other game apps I tried. I cashed out directly to Venmo."</p></article>
+        </div>
+      </section>
+    </main>
 
-<div style="margin:0 auto 14px;perspective:1200px;display:flex;justify-content:center">
-<div class="rc-card" style="width:100%;max-width:320px;aspect-ratio:1.7/1;border-radius:16px;background:linear-gradient(140deg,#0a0a0a 0%,#0a1420 50%,#0d2340 100%);position:relative;overflow:hidden;padding:18px 20px;display:flex;flex-direction:column;justify-content:space-between;color:#fff;box-shadow:rgba(0,140,255,0.22) 0px 18px 40px,rgba(0,0,0,0.5) 0px 8px 18px,rgba(255,255,255,0.06) 0px 1px 0px inset;transform:rotateX(2deg)">
-<!-- Blue accent glow -->
-<div style="position:absolute;top:-30%;right:-20%;width:70%;height:160%;background:radial-gradient(closest-side,rgba(0,140,255,0.55),transparent);pointer-events:none"></div>
-<!-- Purple playful glow -->
-<div style="position:absolute;bottom:-30%;left:-20%;width:50%;height:120%;background:radial-gradient(closest-side,rgba(139,63,255,0.25),transparent);pointer-events:none"></div>
-<!-- Top shine line -->
-<div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent)"></div>
-<!-- Card top -->
-<div style="display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:1">
-<span style="display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:700;letter-spacing:-0.3px;color:#fff">
-<span style="display:flex;align-items:center;justify-content:center;flex-shrink:0"><img src="https://upload.wikimedia.org/wikipedia/commons/8/84/Venmo_logo.png" alt="" style="height:14px;width:auto;object-fit:contain;filter:brightness(0) invert(1)"></span>
-</span>
-<span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#8B3FFF;background:rgba(139,63,255,0.15);padding:3px 8px;border-radius:6px;border:1px solid rgba(139,63,255,0.2)">
-Playful
-</span>
-</div>
-<!-- Card bottom -->
-<div style="position:relative;z-index:1">
-<div style="font-size:10px;color:rgba(255,255,255,0.55);letter-spacing:0.4px;text-transform:uppercase;font-weight:600;margin-bottom:2px">Playful x Venmo Reward</div>
-<div style="font-size:34px;font-weight:800;letter-spacing:-1.2px;line-height:1;background:linear-gradient(#fff,#c8d8ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px"><span style="font-size:20px;vertical-align:4px;margin-right:1px;font-weight:700;opacity:0.85">$</span>750<span style="font-size:16px;font-weight:600;-webkit-text-fill-color:rgba(255,255,255,0.5)">.00</span></div>
-<div style="display:flex;justify-content:space-between;align-items:flex-end;font-size:10.5px">
-<span style="color:#dcdcdc;letter-spacing:0.4px;text-transform:uppercase;font-weight:500">For Verified User</span>
-<span style="display:inline-flex;align-items:center;gap:4px;font-weight:700;letter-spacing:0.4px;text-transform:uppercase;font-size:10px;color:#7ec3ff"><span style="width:5px;height:5px;border-radius:50%;background:#008CFF"></span>Ready to Claim</span>
-</div>
-</div>
-</div>
-</div>
-
-<!-- Compact stats -->
-<div style="display:flex;justify-content:center;gap:16px;margin-bottom:10px;font-size:11px;color:rgba(255,255,255,0.5)">
-<span><strong style="color:#fff">4,291</strong> claimed</span>
-<span>4.9<span style="color:#008CFF">&#9733;</span></span>
-<span>~5 min</span>
-</div>
-
-<!-- Countdown + CTA -->
-<div style="max-width:520px;margin:0 auto;padding:0 20px">
-<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:10px 14px;background:#111118;border:1px solid rgba(255,255,255,0.06);border-radius:10px">
-<span style="font-size:12px;font-weight:600;color:#fff">Reserved<span style="color:rgba(255,255,255,0.4)"> for:</span></span>
-<span id="countdown" style="font-size:13px;font-weight:700;color:#008CFF;font-variant-numeric:tabular-nums">9:55</span>
-<div style="flex:1;max-width:100px;height:3px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;margin:0 10px">
-<div id="progress-bar" style="height:100%;width:100%;background:linear-gradient(135deg,#008CFF,#0070d1);border-radius:99px;transition:width 1s linear"></div>
-</div>
-<span style="font-size:11px;color:rgba(255,255,255,0.4)"><strong style="color:#fff">217</strong> left</span>
-</div>
-
-<a href="https://linkthem.net/aff_c?offer_id=4439&aff_id=2609" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:16px 24px;border-radius:14px;font-size:17px;font-weight:800;color:#fff;background:linear-gradient(135deg,#8B3FFF,#6a2dff);box-shadow:0 4px 20px rgba(139,63,255,0.32),0 1px 3px rgba(0,0,0,0.3);text-decoration:none;white-space:nowrap">
-Install Playful & Earn $750 &#8594;
-</a>
-</div>
-</div>
-
-<!-- Steps -->
-<div style="max-width:520px;margin:0 auto;padding:20px 20px 24px">
-<div style="display:flex;flex-direction:column;gap:16px;margin-bottom:24px">
-<div style="display:flex;gap:12px;align-items:flex-start">
-<div style="flex-shrink:0;width:26px;height:26px;border-radius:50%;background:rgba(139,63,255,0.15);border:1px solid rgba(139,63,255,0.25);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#a78bfa">1</div>
-<div>
-<div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:2px">Install the Playful Rewards app</div>
-<div style="font-size:12px;line-height:1.5;color:rgba(255,255,255,0.5)">Free download, takes 30 seconds.</div>
-</div>
-</div>
-<div style="display:flex;gap:12px;align-items:flex-start">
-<div style="flex-shrink:0;width:26px;height:26px;border-radius:50%;background:rgba(139,63,255,0.15);border:1px solid rgba(139,63,255,0.25);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#a78bfa">2</div>
-<div>
-<div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:2px">Complete game offers & earn points</div>
-<div style="font-size:12px;line-height:1.5;color:rgba(255,255,255,0.5)">Play games, try apps, earn rewards. Under 2 min each.</div>
-</div>
-</div>
-<div style="display:flex;gap:12px;align-items:flex-start">
-<div style="flex-shrink:0;width:26px;height:26px;border-radius:50%;background:rgba(139,63,255,0.15);border:1px solid rgba(139,63,255,0.25);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#a78bfa">3</div>
-<div>
-<div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:2px">$750 lands in your Venmo wallet</div>
-<div style="font-size:12px;line-height:1.5;color:rgba(255,255,255,0.5)">Cash out to Venmo, PayPal, or bank. Same-day payout.</div>
-</div>
-</div>
-</div>
-
-<!-- Trust badges -->
-<div style="display:flex;justify-content:center;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap">
-<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:rgba(255,255,255,0.4)"><svg width="10" height="10" viewBox="0 0 16 16" fill="#008CFF"><path d="M8 1a2 2 0 012 2v4H6V3a2 2 0 012-2zm3 6V3a3 3 0 00-6 0v4a2 2 0 00-2 2v5a2 2 0 002 2h6a2 2 0 002-2V9a2 2 0 00-2-2z"/></svg> 256-bit SSL</span>
-<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:rgba(255,255,255,0.4)"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8B3FFF" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Playful Verified</span>
-<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:rgba(255,255,255,0.4)"><svg width="10" height="10" viewBox="0 0 24 24" fill="#008CFF"><path d="M13 2L3 14h7l-1 8 11-14h-7l1-6z"/></svg> Fast Payout</span>
-</div>
-</div>
-
-<!-- Social proof -->
-<div style="max-width:520px;margin:0 auto;padding:0 20px 40px">
-<div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.4);margin-bottom:10px">TODAY'S CLAIMS</div>
-<div style="display:flex;flex-direction:column;gap:8px">
-<div style="background:#111118;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start">
-<div style="flex-shrink:0;width:28px;height:28px;border-radius:50%;background:rgba(139,63,255,0.12);color:#a78bfa;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700">DM</div>
-<div style="flex:1;min-width:0">
-<div style="display:flex;align-items:center;gap:5px;margin-bottom:2px"><span style="font-size:13px;font-weight:600;color:#fff">DeShawn M.</span><span style="font-size:10px;color:rgba(255,255,255,0.4)">&middot; 28 min ago</span></div>
-<div style="font-size:12px;line-height:1.5;color:rgba(255,255,255,0.6)">Downloaded Playful, did a few game offers, and got the full <span style="color:#008CFF;font-weight:600">$750 in my Venmo</span>. This is legit fr.</div>
-</div>
-</div>
-<div style="background:#111118;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start">
-<div style="flex-shrink:0;width:28px;height:28px;border-radius:50%;background:rgba(139,63,255,0.12);color:#a78bfa;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700">BK</div>
-<div style="flex:1;min-width:0">
-<div style="display:flex;align-items:center;gap:5px;margin-bottom:2px"><span style="font-size:13px;font-weight:600;color:#fff">Brianna K.</span><span style="font-size:10px;color:rgba(255,255,255,0.4)">&middot; 1 hr ago</span></div>
-<div style="font-size:12px;line-height:1.5;color:rgba(255,255,255,0.6)">Week 2 on Playful &mdash; <span style="color:#008CFF;font-weight:600">$683 total earned</span> and cashed out to Venmo. The games are actually fun too.</div>
-</div>
-</div>
-<div style="background:#111118;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start">
-<div style="flex-shrink:0;width:28px;height:28px;border-radius:50%;background:rgba(139,63,255,0.12);color:#a78bfa;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700">TJ</div>
-<div style="flex:1;min-width:0">
-<div style="display:flex;align-items:center;gap:5px;margin-bottom:2px"><span style="font-size:13px;font-weight:600;color:#fff">Tyler J.</span><span style="font-size:10px;color:rgba(255,255,255,0.4)">&middot; 4 hrs ago</span></div>
-<div style="font-size:12px;line-height:1.5;color:rgba(255,255,255,0.6)">Completed my 4th Playful offer today. <span style="color:#008CFF;font-weight:600">$750 hit my Venmo</span> same day. Wild.</div>
-</div>
-</div>
-</div>
-</div>
-
-<!-- Powered by -->
-<div style="text-align:center;padding:8px 20px 4px">
-<div style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,0.3)">
-Powered by Playful Rewards
-</div>
-</div>
-
-<!-- Footer -->
-<footer style="text-align:center;padding:16px;border-top:1px solid rgba(255,255,255,0.06)">
-<div style="font-size:10px;color:rgba(255,255,255,0.4);line-height:1.6;max-width:480px;margin:0 auto">
-&copy; All rights reserved &middot; SSL Encryption &middot; <span style="text-decoration:underline;cursor:pointer">Terms & Privacy</span><br><br>
-Not affiliated with, endorsed by, or sponsored by Venmo. Venmo and the Venmo logo are trademarks of their respective owners. Must be 18+ to participate. US residents only. Reward fulfillment subject to completion of advertiser offers.
-</div>
-</footer>
-
-</div>
-
-<script>
-(function(){
-  var totalSec=595;var el=document.getElementById('countdown');var bar=document.getElementById('progress-bar');
-  if(!el)return;var startTotal=totalSec;
-  function tick(){
-    if(totalSec<=0){el.textContent='0:00';if(bar)bar.style.width='0%';return;}
-    totalSec--;var m=Math.floor(totalSec/60);var s=totalSec%60;
-    el.textContent=m+':'+(s<10?'0':'')+s;
-    if(bar)bar.style.width=((totalSec/startTotal)*100)+'%';
-    setTimeout(tick,1000);
-  }
-  tick();
-})();
-</script>
-
+    <div class="cta-wrap"><a class="cta" href="https://linkthem.net/aff_c?offer_id=4439&aff_id=2609">Install Playful &amp; Get $700 <span aria-hidden="true">→</span></a></div>
+  </div>
+  <script>
+    const VENMO_LOGO = 'https://upload.wikimedia.org/wikipedia/commons/8/84/Venmo_logo.png';
+    const notices = [
+      ['Ava R.', 'Cashed out $120 to Venmo', '+$120'],
+      ['Noah M.', 'Completed a Playful starter offer', '+$45.50'],
+      ['Mia K.', 'Venmo reward unlocked', '+$85.00'],
+      ['Leo T.', 'Finished today\u2019s reward drop', '+$240.25'],
+      ['Sara L.', 'Payout sent to Venmo', '+$75.00']
+    ];
+    let noticeIndex = 0;
+    const zone = document.getElementById('notifZone');
+    function showNotice() {
+      const [name, desc, amount] = notices[noticeIndex++ % notices.length];
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = '<div class="toast-icon"><img src="' + VENMO_LOGO + '" alt="Venmo" /></div><div><strong>' + name + ' earned ' + amount + '</strong><span>' + desc + '</span></div>';
+      zone.appendChild(toast);
+      setTimeout(() => { toast.classList.add('out'); setTimeout(() => toast.remove(), 300); }, 4200);
+    }
+    let seconds = 30 * 60;
+    setInterval(() => { if (seconds <= 0) return; seconds--; document.getElementById('countdown').textContent = Math.floor(seconds / 60) + ':' + String(seconds % 60).padStart(2, '0'); }, 1000);
+    setTimeout(showNotice, 1800);
+    (function loop() { setTimeout(() => { showNotice(); loop(); }, 5000 + Math.random() * 2500); }());
+  </script>
 </body>
 </html>
