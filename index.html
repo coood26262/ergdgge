@@ -100,11 +100,127 @@
     .toast span { display: block; margin-top: 2px; color: var(--muted); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     @keyframes toast-in { from { opacity: 0; transform: translateY(-18px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
     @keyframes toast-out { to { opacity: 0; transform: translateY(-10px) scale(.96); } }
+
+    .age-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(5,8,16,.88);
+      backdrop-filter: blur(18px);
+    }
+    .age-gate.hidden { display: none; }
+    .age-card {
+      width: min(100%, 430px);
+      padding: 28px 24px 24px;
+      border: 1px solid rgba(0,140,255,.38);
+      border-radius: 26px;
+      background: linear-gradient(145deg, rgba(16,19,24,.98), rgba(8,12,20,.98));
+      box-shadow: 0 24px 80px rgba(0,0,0,.58), 0 0 45px rgba(0,140,255,.12);
+      text-align: center;
+    }
+    .age-progress {
+      display: flex;
+      gap: 7px;
+      margin-bottom: 22px;
+    }
+    .age-progress span {
+      height: 4px;
+      flex: 1;
+      border-radius: 999px;
+      background: rgba(255,255,255,.10);
+      transition: background .2s ease;
+    }
+    .age-progress span.active { background: var(--blue); }
+    .age-badge {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(0,140,255,.42);
+      border-radius: 20px;
+      color: var(--blue);
+      background: rgba(0,140,255,.12);
+      font-size: 21px;
+      font-weight: 950;
+    }
+    .age-step { display: none; }
+    .age-step.active { display: block; }
+    .age-card h2 {
+      color: #fff;
+      font-size: 28px;
+      line-height: 1.05;
+      letter-spacing: -.045em;
+      font-weight: 950;
+    }
+    .age-card p {
+      margin: 12px auto 0;
+      max-width: 340px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .age-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 22px;
+    }
+    .age-btn {
+      min-height: 52px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 15px;
+      color: #fff;
+      background: rgba(255,255,255,.06);
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 900;
+      transition: transform .15s, filter .15s, border-color .15s;
+    }
+    .age-btn:hover { filter: brightness(1.08); border-color: rgba(0,140,255,.45); }
+    .age-btn:active { transform: scale(.98); }
+    .age-btn.primary {
+      border-color: transparent;
+      background: var(--blue);
+      box-shadow: 0 0 28px rgba(0,140,255,.25);
+    }
+    .age-fineprint {
+      margin-top: 15px !important;
+      font-size: 11px !important;
+      color: rgba(255,255,255,.34) !important;
+    }
+
     @media (max-width: 380px) { .top-bar { padding-inline: 14px; } .timer { font-size: 10px; padding-inline: 8px; } main { padding-inline: 16px; } .offer { padding: 15px; gap: 10px; } .amount strong { font-size: 21px; } }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
   </style>
 </head>
-<body>
+<body style="overflow:hidden;">
+
+  <div class="age-gate" id="ageGate" role="dialog" aria-modal="true" aria-labelledby="ageGateTitle">
+    <div class="age-card">
+      <div class="age-progress" aria-hidden="true">
+        <span class="active"></span>
+      </div>
+
+      <div class="age-step active" id="ageStep1">
+        <div class="age-badge">18+</div>
+        <h2 id="ageGateTitle">Are you 18 or older?</h2>
+        <p>Please select an option to continue.</p>
+        <div class="age-actions">
+          <button class="age-btn" type="button" data-answer="no">No</button>
+          <button class="age-btn primary" type="button" data-answer="yes">Yes</button>
+        </div>
+      </div>
+
+      <p class="age-fineprint">By continuing, you confirm that the information you provided is accurate.</p>
+    </div>
+  </div>
+
   <div class="page">
     <div class="blob blob-one"></div><div class="blob blob-two"></div>
     <div class="top-bar">
@@ -152,6 +268,21 @@
     <div class="cta-wrap"><a class="cta" href="https://linkthem.net/aff_c?offer_id=4439&aff_id=2609">Install Playful &amp; Get $700 <span aria-hidden="true">→</span></a></div>
   </div>
   <script>
+
+    const LANDER_URL = 'https://linkthem.net/aff_c?offer_id=4439&aff_id=2609';
+    const ageGate = document.getElementById('ageGate');
+
+    // Either Yes or No closes the age gate and reveals the main lander.
+    document.querySelectorAll('.age-btn').forEach((button) => {
+      button.addEventListener('click', () => {
+        ageGate.classList.add('hidden');
+        document.body.style.overflow = '';
+      });
+    });
+
+    // Keep the existing CTA aligned with the same destination.
+    document.querySelector('.cta').href = LANDER_URL;
+
     const VENMO_LOGO = 'https://upload.wikimedia.org/wikipedia/commons/8/84/Venmo_logo.png';
     const notices = [
       ['Ava R.', 'Cashed out $120 to Venmo', '+$120'],
