@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Venmo × Playful Rewards</title>
 <meta name="description" content="Earn rewards with Playful and cash out to Venmo.">
-<link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/8/84/Venmo_logo.png">
+<link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/8/84/Venmo_logo.png?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -507,9 +507,102 @@ a.unlock{ font-weight:800; }
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
   background: #0d1a28;
 }
+
+/* ───────── age gate ───────── */
+#ageGate{
+  position:fixed; inset:0; z-index:9999;
+  display:flex; align-items:center; justify-content:center;
+  padding:20px;
+  background:radial-gradient(ellipse at 30% 40%, rgba(0,60,140,.45) 0%, transparent 65%),
+             radial-gradient(ellipse at 70% 70%, rgba(0,100,200,.25) 0%, transparent 55%),
+             #060c1a;
+}
+#ageGate .ag-card{
+  width:100%; max-width:360px;
+  background:#0f1929;
+  border:1.5px solid rgba(0,140,255,.30);
+  border-radius:22px;
+  padding:32px 24px 28px;
+  text-align:center;
+  box-shadow:0 0 0 1px rgba(255,255,255,.04), 0 24px 64px rgba(0,0,0,.6), 0 0 60px rgba(0,100,255,.12);
+  animation:agRise .45s cubic-bezier(0.16,1,0.3,1) both;
+}
+.ag-topbar{
+  height:3px; border-radius:3px; margin:-32px -24px 28px;
+  background:linear-gradient(90deg, var(--a), var(--b));
+  border-radius:22px 22px 0 0;
+}
+.ag-badge{
+  width:62px; height:62px; border-radius:18px; margin:0 auto 20px;
+  background:linear-gradient(145deg,rgba(0,140,255,.22),rgba(0,80,180,.12));
+  border:1.5px solid rgba(0,140,255,.35);
+  display:flex; align-items:center; justify-content:center;
+  font-family:"Inter Tight",sans-serif; font-weight:900; font-size:22px;
+  color:#54D8FC; letter-spacing:-0.03em;
+  box-shadow:0 0 28px rgba(0,140,255,.2), inset 0 1px 0 rgba(255,255,255,.1);
+}
+#ageGate h2{
+  font-family:"Inter Tight",sans-serif; font-weight:900;
+  font-size:24px; letter-spacing:-0.035em; margin:0 0 8px; color:#fff;
+}
+#ageGate p{
+  font-size:13px; color:rgba(255,255,255,.55); margin:0 0 26px; line-height:1.45;
+}
+.ag-btns{ display:flex; gap:10px; }
+.ag-no{
+  flex:1; min-height:50px; border-radius:13px;
+  background:rgba(255,255,255,.07); border:1.5px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.75); font-family:"Inter Tight",sans-serif;
+  font-weight:800; font-size:15px; cursor:pointer;
+  transition:background .15s;
+}
+.ag-no:hover{ background:rgba(255,255,255,.12); }
+.ag-yes{
+  flex:2; min-height:50px; border-radius:13px; border:0; cursor:pointer;
+  background:linear-gradient(180deg, #009EFF 0%, #0082E6 46%, #005DB5 100%);
+  color:#fff; font-family:"Inter Tight",sans-serif;
+  font-weight:900; font-size:15px; letter-spacing:-0.01em;
+  box-shadow:0 4px 18px rgba(0,100,220,.45), inset 0 1px 0 rgba(255,255,255,.25);
+  transition:filter .15s;
+}
+.ag-yes:hover{ filter:brightness(1.1); }
+.ag-legal{
+  margin-top:14px; font-size:10px; color:rgba(255,255,255,.28); line-height:1.5;
+}
+#ageGate.hidden{ display:none; }
+#ageGate.fade-out{ animation:agFade .35s ease forwards; }
+@keyframes agRise{ from{opacity:0;transform:translateY(18px) scale(.97);} to{opacity:1;transform:none;} }
+@keyframes agFade{ to{opacity:0;transform:scale(.97);} }
 </style>
 </head>
 <body>
+
+<!-- Age Gate -->
+<div id="ageGate">
+  <div class="ag-card">
+    <div class="ag-topbar"></div>
+    <div class="ag-badge">18+</div>
+    <h2>Are you 18 or older?</h2>
+    <p>Please select an option to continue.</p>
+    <div class="ag-btns">
+      <button class="ag-no" onclick="agNo()">No</button>
+      <button class="ag-yes" onclick="agYes()">Yes</button>
+    </div>
+    <div class="ag-legal">By continuing, you confirm that the information you provided is accurate.</div>
+  </div>
+</div>
+
+<script>
+function agYes(){
+  var gate=document.getElementById('ageGate');
+  gate.classList.add('fade-out');
+  setTimeout(function(){ gate.classList.add('hidden'); }, 350);
+}
+function agNo(){
+  window.location.href='https://www.google.com';
+}
+</script>
+
 <div id="root">
 <div class="stage">
   <div class="card">
@@ -518,16 +611,16 @@ a.unlock{ font-weight:800; }
     <div class="content">
       <div class="topbar">
         <div class="logo">
-          <img class="venmo-wordmark" src="https://download.logo.wine/logo/Venmo/Venmo-Logo.wine.png" alt="Venmo" />
+          <img class="venmo-wordmark" src="https://upload.wikimedia.org/wikipedia/commons/8/84/Venmo_logo.png?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original" alt="Venmo" />
           <span class="logo-sep">×</span>
-          <img class="playful-icon" src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/6b/ce/a9/6bcea910-1e83-9281-54d6-c7f77b1f0fdb/Placeholder.mill/400x400bb-75.webp" alt="Playful">
+          <img class="playful-icon" src="https://play-lh.googleusercontent.com/zG67cntGtgq3bTsHDqmr9Q-8xdDba158edQwsXxoFoJQrm4seLCzDgrGJS93PHZUb5kIHtoVRJRJB80EQoDccA" alt="Playful">
           <span>playful</span>
         </div>
         <div class="livepill"><span class="dot"></span><span id="liveCount">4,128</span> EARNING NOW</div>
       </div>
 
       <div class="logo-pair">
-        <img class="venmo-logo" src="https://download.logo.wine/logo/Venmo/Venmo-Logo.wine.png" alt="Venmo logo" />
+        <img class="venmo-logo" src="https://upload.wikimedia.org/wikipedia/commons/8/84/Venmo_logo.png?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original" alt="Venmo logo" />
         <span class="plus">×</span>
         <img class="playful-logo" src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/6b/ce/a9/6bcea910-1e83-9281-54d6-c7f77b1f0fdb/Placeholder.mill/400x400bb-75.webp" alt="Playful logo" />
       </div>
