@@ -1,310 +1,798 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#008CFF" />
-  <meta name="description" content="Earn rewards with Playful and cash out to Venmo." />
-  <title> — Earn rewards</title>
-  <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/8/84/Venmo_logo.png" />
-  <style>
-    :root {
-      --blue: #008CFF;
-      --blue-soft: rgba(0, 140, 255, .12);
-      --ink: #050810;
-      --panel: #101318;
-      --muted: rgba(255,255,255,.56);
-      --line: rgba(255,255,255,.10);
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { min-height: 100%; -webkit-text-size-adjust: 100%; }
-    body {
-      color: #fff;
-      background: var(--ink);
-      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-    }
-    button { font: inherit; }
-    .page { min-height: 100vh; position: relative; isolation: isolate; overflow: hidden; }
-    .page::before {
-      content: ""; position: absolute; inset: 0; z-index: -2; pointer-events: none;
-      background: radial-gradient(circle at 50% -8%, rgba(0,140,255,.20), transparent 34%),
-        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
-      background-size: auto, 34px 34px, 34px 34px;
-      mask-image: linear-gradient(to bottom, black, transparent 78%);
-    }
-    .blob { position: absolute; z-index: -1; border-radius: 999px; filter: blur(1px); pointer-events: none; opacity: .8; }
-    .blob-one { width: 180px; height: 180px; right: -90px; top: 145px; background: var(--blue); opacity: .11; }
-    .blob-two { width: 130px; height: 130px; left: -74px; top: 510px; border: 1px solid rgba(0,140,255,.30); transform: rotate(19deg); }
-    .top-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--line); background: rgba(5,8,16,.82); backdrop-filter: blur(14px); position: sticky; top: 0; z-index: 20; }
-    .brand { display: flex; align-items: center; gap: 9px; min-width: 0; }
-    .brand img { height: 22px; width: auto; object-fit: contain; }
-    .brand-name { font-size: 15px; font-weight: 800; letter-spacing: -.02em; white-space: nowrap; }
-    .brand-name small { display: block; color: var(--blue); font-size: 9px; letter-spacing: .14em; text-transform: uppercase; margin-top: 2px; }
-    .timer { display: flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: rgba(255,255,255,.06); border-radius: 999px; padding: 7px 10px; color: var(--muted); font-size: 11px; white-space: nowrap; }
-    .timer strong { color: #fff; font-variant-numeric: tabular-nums; }
-    main { max-width: 520px; margin: 0 auto; padding: 38px 20px 150px; }
-    .hero { text-align: center; }
-    .logo-pair { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 22px; }
-    .logo-pair .venmo-logo { height: 44px; width: auto; object-fit: contain; padding: 12px 16px; background: #fff; border-radius: 16px; box-shadow: 0 0 0 5px rgba(0,140,255,.12), 0 12px 26px rgba(0,0,0,.35); }
-    .logo-pair .playful-logo { width: 70px; height: 70px; border-radius: 20px; object-fit: cover; box-shadow: 0 0 0 5px rgba(255,255,255,.06), 0 12px 26px rgba(0,0,0,.35); }
-    .plus { color: var(--blue); font-size: 22px; font-weight: 900; }
-    .eyebrow { color: var(--blue); font-size: 11px; font-weight: 900; letter-spacing: .18em; text-transform: uppercase; margin-bottom: 11px; }
-    h1 { font-size: clamp(34px, 9vw, 50px); line-height: .98; letter-spacing: -.065em; font-weight: 950; }
-    h1 em { color: var(--blue); font-style: normal; }
-    .lede { max-width: 395px; margin: 18px auto 0; color: var(--muted); font-size: 15px; line-height: 1.55; }
-    .offer { position: relative; margin: 30px auto 0; overflow: hidden; display: flex; align-items: center; gap: 14px; padding: 18px; border: 1px solid rgba(0,140,255,.48); border-radius: 24px; background: linear-gradient(125deg, rgba(0,140,255,.18), rgba(0,140,255,.035) 60%, rgba(255,255,255,.04)); box-shadow: 0 18px 48px rgba(0,0,0,.22); text-align: left; }
-    .offer::after { content: ""; position: absolute; width: 160px; height: 160px; top: -100px; right: -60px; border: 1px solid rgba(0,140,255,.28); border-radius: 50%; }
-    .offer-icon { width: 62px; height: 62px; border-radius: 17px; background: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 12px; }
-    .offer-icon img { width: 100%; height: auto; object-fit: contain; }
-    .offer-copy { min-width: 0; flex: 1; }
-    .offer-label { color: var(--blue); font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: .16em; margin-bottom: 5px; }
-    .offer-title { font-size: 17px; font-weight: 850; letter-spacing: -.02em; }
-    .offer-sub { margin-top: 3px; color: var(--muted); font-size: 12px; }
-    .amount { position: relative; z-index: 1; text-align: right; flex-shrink: 0; }
-    .amount strong { display: block; color: var(--blue); font-size: 25px; letter-spacing: -.06em; }
-    .amount span { color: rgba(255,255,255,.44); font-size: 9px; font-weight: 800; letter-spacing: .12em; }
-    .section-kicker { margin: 28px 0 16px; color: rgba(255,255,255,.35); font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
-    .steps { margin-top: 0; text-align: left; }
-    .step { display: flex; gap: 16px; padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,.06); }
-    .step:last-child { border-bottom: 0; }
-    .step-number { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; flex-shrink: 0; border: 1px solid rgba(0,140,255,.25); border-radius: 12px; color: var(--blue); background: rgba(0,140,255,.12); font-size: 16px; font-weight: 800; }
-    .step h2 { color: #fff; font-size: 15px; line-height: 1.25; letter-spacing: -.02em; }
-    .step p { margin-top: 4px; color: rgba(255,255,255,.45); font-size: 13px; line-height: 1.5; }
-    .step-note { display: inline-block; margin-top: 6px; padding: 2px 8px; border-radius: 6px; color: var(--blue); background: rgba(0,140,255,.15); font-size: 11px; font-weight: 700; line-height: 1.25; }
-    .proof { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 25px 0 0; color: rgba(255,255,255,.46); font-size: 12px; }
-    .stars { color: var(--blue); letter-spacing: 2px; font-size: 15px; }
-    .stories { margin-top: 42px; }
-    .stories .section-kicker { margin: 0 0 10px; color: var(--blue); }
-    .stories-title { margin-bottom: 20px; color: #fff; font-size: clamp(30px, 8vw, 42px); line-height: .98; letter-spacing: -.06em; font-weight: 950; }
-    .story-list { display: grid; gap: 13px; }
-    .story-card { padding: 20px; border: 1px solid rgba(255,255,255,.13); border-radius: 22px; background: rgba(16,19,24,.90); box-shadow: 0 10px 28px rgba(0,0,0,.16); }
-    .story-head { display: flex; align-items: center; gap: 11px; }
-    .story-avatar { display: flex; align-items: center; justify-content: center; width: 43px; height: 43px; flex-shrink: 0; border: 1px solid rgba(0,140,255,.42); border-radius: 50%; color: var(--blue); background: rgba(0,140,255,.10); font-size: 13px; font-weight: 950; }
-    .story-name { color: #fff; font-size: 15px; font-weight: 850; }
-    .story-tier { margin-top: 3px; color: var(--muted); font-size: 11px; }
-    .story-stars { margin-left: auto; color: #ffc247; font-size: 13px; letter-spacing: 1px; white-space: nowrap; }
-    .story-quote { margin-top: 16px; color: rgba(255,255,255,.62); font-size: 14px; line-height: 1.5; }
-    .cta-wrap { position: fixed; z-index: 15; right: 0; bottom: 0; left: 0; padding: 14px 20px 22px; background: linear-gradient(to top, var(--ink) 62%, transparent); pointer-events: none; }
-    .cta { display: flex; align-items: center; justify-content: center; gap: 9px; max-width: 480px; width: 100%; margin: 0 auto; padding: 19px 22px; border: 0; border-radius: 17px; color: #fff; background: var(--blue); box-shadow: 0 0 35px rgba(0,140,255,.34); cursor: pointer; font-size: 17px; font-weight: 950; letter-spacing: -.02em; pointer-events: auto; transition: transform .15s, filter .15s; text-decoration: none; }
-    .cta:hover { filter: brightness(1.07); }
-    .cta:active { transform: scale(.98); }
-    .notif-zone { position: fixed; z-index: 30; top: 70px; left: 50%; width: min(calc(100% - 40px), 360px); transform: translateX(-50%); pointer-events: none; }
-    .toast { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; padding: 11px 13px; border: 1px solid rgba(255,255,255,.12); border-radius: 15px; background: rgba(16,19,24,.92); box-shadow: 0 10px 34px rgba(0,0,0,.42); backdrop-filter: blur(15px); animation: toast-in .4s cubic-bezier(.16,1,.3,1) both; }
-    .toast.out { animation: toast-out .28s ease forwards; }
-    .toast .toast-icon { width: 34px; height: 34px; border-radius: 10px; background: #fff; display: flex; align-items: center; justify-content: center; padding: 6px; flex-shrink: 0; }
-    .toast .toast-icon img { width: 100%; height: auto; object-fit: contain; }
-    .toast strong { display: block; font-size: 12px; }
-    .toast span { display: block; margin-top: 2px; color: var(--muted); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    @keyframes toast-in { from { opacity: 0; transform: translateY(-18px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
-    @keyframes toast-out { to { opacity: 0; transform: translateY(-10px) scale(.96); } }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Venmo × Playful Rewards</title>
+<meta name="description" content="Earn rewards with Playful and cash out to Venmo.">
+<link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/8/84/Venmo_logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter+Tight:wght@500;600;700;800;900&display=swap">
+<style>*{-webkit-tap-highlight-color:transparent}a,button{touch-action:manipulation;cursor:pointer}</style>
+<style>
+/* VENMO x PLAYFUL REWARDS — scroll lander */
 
-    .age-gate {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      background: rgba(5,8,16,.88);
-      backdrop-filter: blur(18px);
-    }
-    .age-gate.hidden { display: none; }
-    .age-card {
-      width: min(100%, 430px);
-      padding: 28px 24px 24px;
-      border: 1px solid rgba(0,140,255,.38);
-      border-radius: 26px;
-      background: linear-gradient(145deg, rgba(16,19,24,.98), rgba(8,12,20,.98));
-      box-shadow: 0 24px 80px rgba(0,0,0,.58), 0 0 45px rgba(0,140,255,.12);
-      text-align: center;
-    }
-    .age-progress {
-      display: flex;
-      gap: 7px;
-      margin-bottom: 22px;
-    }
-    .age-progress span {
-      height: 4px;
-      flex: 1;
-      border-radius: 999px;
-      background: rgba(255,255,255,.10);
-      transition: background .2s ease;
-    }
-    .age-progress span.active { background: var(--blue); }
-    .age-badge {
-      width: 64px;
-      height: 64px;
-      margin: 0 auto 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(0,140,255,.42);
-      border-radius: 20px;
-      color: var(--blue);
-      background: rgba(0,140,255,.12);
-      font-size: 21px;
-      font-weight: 950;
-    }
-    .age-step { display: none; }
-    .age-step.active { display: block; }
-    .age-card h2 {
-      color: #fff;
-      font-size: 28px;
-      line-height: 1.05;
-      letter-spacing: -.045em;
-      font-weight: 950;
-    }
-    .age-card p {
-      margin: 12px auto 0;
-      max-width: 340px;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.5;
-    }
-    .age-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 22px;
-    }
-    .age-btn {
-      min-height: 52px;
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 15px;
-      color: #fff;
-      background: rgba(255,255,255,.06);
-      cursor: pointer;
-      font-size: 15px;
-      font-weight: 900;
-      transition: transform .15s, filter .15s, border-color .15s;
-    }
-    .age-btn:hover { filter: brightness(1.08); border-color: rgba(0,140,255,.45); }
-    .age-btn:active { transform: scale(.98); }
-    .age-btn.primary {
-      border-color: transparent;
-      background: var(--blue);
-      box-shadow: 0 0 28px rgba(0,140,255,.25);
-    }
-    .age-fineprint {
-      margin-top: 15px !important;
-      font-size: 11px !important;
-      color: rgba(255,255,255,.34) !important;
-    }
+:root{
+  --hue-a: 210;
+  --hue-b: 200;
+  --blue: #008CFF;
+  --blue-soft: rgba(0,140,255,.12);
+  --a:  #008CFF;
+  --b:  #54D8FC;
+  --as: #80BFFF;
+  --bs: #A0E6FF;
+  --cta-fg: #fff;
+  --cta-gold-top: #009EFF;
+  --cta-gold-mid: #0082E6;
+  --cta-gold-bot: #005DB5;
+}
 
-    @media (max-width: 380px) { .top-bar { padding-inline: 14px; } .timer { font-size: 10px; padding-inline: 8px; } main { padding-inline: 16px; } .offer { padding: 15px; gap: 10px; } .amount strong { font-size: 21px; } }
-    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
-  </style>
+*{ box-sizing: border-box; }
+
+html, body{
+  margin:0; padding:0;
+  background:#050810; color:#fff;
+  font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+  letter-spacing:-0.01em;
+  min-height:100vh; min-height:100dvh;
+  -webkit-text-size-adjust:100%;
+  -webkit-tap-highlight-color:transparent;
+  overscroll-behavior-y:none;
+}
+button{ font-family:inherit; -webkit-tap-highlight-color:transparent; touch-action:manipulation; }
+input, textarea{ font-size:16px; }
+img{ max-width:100%; }
+
+#root{
+  min-height:100vh; min-height:100dvh;
+  width:100%;
+  background:#050A1A;
+  display:flex; justify-content:center;
+}
+.stage{ width:100%; max-width:100%; }
+
+/* ───────── page shell ───────── */
+.card{
+  position:relative; overflow:hidden;
+  min-height:100vh; min-height:100dvh;
+  background:linear-gradient(180deg,#050A1A 0%,#06101F 60%,#050810 100%);
+  padding-top:max(18px, env(safe-area-inset-top));
+  padding-bottom:max(32px, env(safe-area-inset-bottom));
+  padding-left:max(20px, env(safe-area-inset-left));
+  padding-right:max(20px, env(safe-area-inset-right));
+}
+.card::after{
+  content:''; position:absolute; inset:0; z-index:3; pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:.045; mix-blend-mode:overlay;
+}
+.blob{ position:absolute; border-radius:50%; pointer-events:none; z-index:0; }
+.blob-a{ top:-50px; left:-40px; width:240px; height:240px;
+  background:radial-gradient(circle, rgba(0,140,255,.25) 0%, transparent 65%); }
+.blob-b{ top:140px; right:-60px; width:220px; height:220px;
+  background:radial-gradient(circle, rgba(84,216,252,.20) 0%, transparent 65%); }
+
+.content{ position:relative; z-index:1; animation:riseIn .75s cubic-bezier(0.16,1,0.3,1) both; }
+
+/* ───────── top bar ───────── */
+.topbar{ display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+.logo{ display:flex; align-items:center; gap:10px; }
+.logo .venmo-wordmark{ height:28px; width:auto; mix-blend-mode:screen; }
+.logo-sep{ color:rgba(255,255,255,.3); font-size:16px; font-weight:300; }
+.logo .playful-icon{ width:26px; height:26px; border-radius:7px; display:block;
+  box-shadow:0 4px 12px rgba(0,0,0,.4), inset 0 0 0 1px rgba(255,255,255,.08); }
+.logo span{ font-family:"Poppins",-apple-system,sans-serif; font-weight:700; font-size:15px;
+  letter-spacing:-0.02em; color:rgba(255,255,255,.75); line-height:1; }
+
+.livepill{
+  display:flex; align-items:center; gap:6px;
+  font-size:10.5px; color:var(--as); font-weight:600; letter-spacing:.01em;
+  background:rgba(0,140,255,.12);
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  padding:7px 13px; border-radius:99px;
+  border:1px solid rgba(0,140,255,.24);
+  white-space:nowrap;
+}
+.dot{ width:6px; height:6px; border-radius:50%; background:var(--blue);
+  box-shadow:0 0 8px var(--blue); animation:fcPulse 1.2s ease-in-out infinite; flex-shrink:0; }
+
+/* ───────── logo pair ───────── */
+.logo-pair{ display:flex; align-items:center; justify-content:center; gap:14px; margin-bottom:22px; }
+.logo-pair .venmo-logo{ height:56px; width:auto; mix-blend-mode:screen; }
+.logo-pair .playful-logo{ width:66px; height:66px; border-radius:18px; object-fit:cover; box-shadow:0 0 0 5px rgba(255,255,255,.06), 0 12px 26px rgba(0,0,0,.35); }
+.plus{ color:var(--blue); font-size:22px; font-weight:900; }
+
+/* ───────── headline ───────── */
+h1.headline{
+  font-family:"Inter Tight",sans-serif; font-weight:900;
+  font-size:40px; line-height:.96; letter-spacing:-0.04em;
+  text-align:center; margin:10px 0 12px;
+}
+.hl1{
+  display:inline-block;
+  background:linear-gradient(100deg,#fff 0%,#fff 43%,#E0F0FF 50%,#fff 57%,#fff 100%);
+  background-size:250% 100%;
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  animation:headlineShine 13s linear infinite;
+}
+.hl2{
+  display:inline-block; font-size:min(58px,12.5vw); line-height:.95;
+  background:linear-gradient(100deg, var(--as) 0%, var(--as) 40%, #FFFFFF 50%, var(--bs) 60%, var(--bs) 100%);
+  background-size:250% 100%;
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 24px rgba(0,140,255,.42));
+  animation:headlineShine 13s linear infinite;
+}
+p.sub{ text-align:center; font-size:13.5px; color:rgba(255,255,255,.65); margin:0 8px 12px; line-height:1.45; }
+
+/* ───────── rank ladder ───────── */
+.ladder{ margin:2px 0 16px; }
+.ladder-head{
+  display:flex; align-items:center; gap:7px; margin:0 2px 8px;
+  font-size:9.5px; font-weight:800; letter-spacing:.16em;
+  color:rgba(255,255,255,.34); text-transform:uppercase;
+}
+.ladder-head i{ flex:1; height:1px; font-style:normal; }
+.ladder-head i:first-child{ background:linear-gradient(90deg,transparent,rgba(255,255,255,.14)); }
+.ladder-head i:last-child{  background:linear-gradient(90deg,rgba(255,255,255,.14),transparent); }
+.ladder-rows{ display:flex; flex-direction:column; gap:8px; }
+.tier{ position:relative; animation:tlRise .62s cubic-bezier(0.16,1,0.3,1) both; }
+.tier-inner{
+  position:relative; z-index:1; overflow:hidden;
+  display:flex; align-items:center; gap:11px;
+  padding:10px 13px 10px 10px; border-radius:17px;
+  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+}
+.tier-badge{
+  position:relative; z-index:3; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; gap:4px;
+  min-width:74px; padding:7px 11px; border-radius:99px;
+  font-family:"Inter Tight",sans-serif; font-weight:900; font-size:12.5px; letter-spacing:.04em;
+}
+.tier-txt{ position:relative; z-index:3; flex:1; min-width:0; text-align:right; }
+.tier-req{ font-size:11.5px; font-weight:700; letter-spacing:-0.01em; line-height:1.25; }
+.tier-perk{ margin-top:2.5px; font-size:10.5px; font-weight:600; line-height:1.3; letter-spacing:-0.005em; color:#80BFFF; }
+.tier-sheen{
+  position:absolute; top:0; bottom:0; left:0; width:38%; z-index:2; pointer-events:none;
+}
+
+/* noob */
+.t-noob .tier-inner{ background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.018)); border:1px solid rgba(255,255,255,.10); }
+.t-noob .tier-badge{ background:linear-gradient(150deg,#A2ABB3 0%,#737C83 52%,#545C62 100%); color:#0D1013; box-shadow:inset 0 1px 0 rgba(255,255,255,.3); }
+.t-noob .tier-req{ color:rgba(255,255,255,.52); }
+/* pro */
+.t-pro .tier-inner{ background:linear-gradient(135deg,rgba(0,100,220,.16),rgba(0,60,140,.07)); border:1px solid rgba(0,140,255,.32); animation:tlProGlow 3s ease-in-out infinite; }
+.t-pro .tier-badge{ background:linear-gradient(150deg,#70B8FF 0%,#008CFF 45%,#0060CC 100%); color:#001833; box-shadow:0 3px 14px rgba(0,100,220,.5), inset 0 1px 0 rgba(255,255,255,.4); }
+.t-pro .tier-req{ color:rgba(190,220,255,.78); }
+.t-pro .tier-sheen{ background:linear-gradient(90deg,transparent,rgba(190,220,255,.24),transparent); animation:tlSheen 4.2s ease-in-out infinite; }
+/* god / scroller */
+.t-god .tier-inner{ background:linear-gradient(135deg,rgba(0,180,255,.17),rgba(0,100,200,.07)); border:1px solid rgba(84,216,252,.40);
+  box-shadow:0 4px 24px rgba(0,140,255,.26), inset 0 1px 0 rgba(255,255,255,.14); }
+.t-god .tier-badge{ background:linear-gradient(150deg,#A8E6FF 0%,#54D8FC 42%,#009FCC 100%); color:#001822; box-shadow:0 3px 14px rgba(0,180,255,.55), inset 0 1px 0 rgba(255,255,255,.65); }
+.t-god .tier-req{ color:rgba(200,240,255,.82); }
+.t-god .tier-sheen{ background:linear-gradient(90deg,transparent,rgba(200,240,255,.30),transparent); animation:tlSheen 3.4s ease-in-out .5s infinite; }
+.t-god .tier-perk{
+  color:transparent;
+  background:linear-gradient(100deg,#54D8FC 0%,#80CFFF 18%,#D0EFFF 32%,#FFFFFF 40%,#D0EFFF 48%,#80CFFF 62%,#54D8FC 100%);
+  background-size:200% 100%;
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 6px rgba(84,216,252,.32));
+  animation:tlGoldFlow 3.4s ease-in-out .5s infinite;
+}
+.god-aura{
+  position:absolute; inset:-7px; border-radius:24px; z-index:0; pointer-events:none;
+  background:radial-gradient(60% 120% at 18% 50%, rgba(0,180,255,.55) 0%, rgba(0,120,220,.20) 45%, transparent 78%);
+  filter:blur(11px); animation:tlGodAura 2.6s ease-in-out infinite;
+}
+.god-spark{
+  position:absolute; top:-2px; right:-1px; width:5px; height:5px; border-radius:50%;
+  background:#D0F0FF; box-shadow:0 0 8px 2px rgba(150,230,255,.95);
+  animation:tlSpark 2.2s ease-in-out infinite;
+}
+
+/* ───────── scroll-to-earn pill ───────── */
+.se{
+  position:relative; margin:0 0 16px; padding:11px 13px 13px;
+  border-radius:20px; overflow:hidden;
+  background:linear-gradient(150deg, rgba(0,140,255,.10) 0%, rgba(255,255,255,.035) 45%, rgba(255,255,255,.02) 100%);
+  border:1px solid rgba(0,140,255,.22);
+  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08), 0 6px 26px rgba(0,0,0,.28);
+}
+.se-bar{
+  position:relative; display:flex; align-items:flex-end; justify-content:space-between;
+  padding-bottom:10px; margin-bottom:11px; border-bottom:1px solid rgba(255,255,255,.08);
+}
+.se-label{
+  display:flex; align-items:center; gap:5px;
+  font-size:9px; font-weight:800; letter-spacing:.14em;
+  color:rgba(255,255,255,.42); text-transform:uppercase; margin-bottom:3px;
+}
+.se-label .dot{ width:5px; height:5px; background:#54D8FC; box-shadow:0 0 8px #54D8FC; }
+.se-balrow{ display:flex; align-items:baseline; gap:6px; }
+#seBal{
+  font-family:"Inter Tight",sans-serif; font-weight:900; font-size:27px; line-height:1;
+  letter-spacing:-0.03em; color:#A8E6FF; text-shadow:0 0 18px rgba(0,140,255,.5);
+  display:inline-block;
+}
+#seBal.pop{ animation:seBalPop .5s cubic-bezier(0.16,1,0.3,1); }
+.se-usd{ font-size:10px; font-weight:700; color:rgba(255,255,255,.34); }
+.se-lane{ position:relative; flex:1; align-self:stretch; min-width:44px; }
+.se-fly{
+  position:absolute; left:50%; bottom:4px; transform:translate(-50%,0); white-space:nowrap;
+  font-family:"Inter Tight",sans-serif; font-weight:900; font-size:15px; letter-spacing:-0.02em;
+  color:#54D8FC; text-shadow:0 0 14px rgba(0,140,255,.75);
+  animation:seFly 1.1s cubic-bezier(0.16,1,0.3,1) forwards; pointer-events:none;
+}
+.se-rate{
+  display:inline-flex; align-items:center; gap:4px;
+  padding:5px 9px; border-radius:99px;
+  background:rgba(0,140,255,.12); border:1px solid rgba(0,140,255,.28);
+  font-size:9.5px; font-weight:800; letter-spacing:.01em; color:#A8E6FF;
+}
+.se-body{ display:flex; align-items:center; gap:13px; }
+.se-phone{
+  position:relative; flex-shrink:0; width:112px; height:180px; padding:4px;
+  border-radius:17px; background:linear-gradient(160deg,#112038,#0a1526);
+  box-shadow:0 8px 22px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.16);
+}
+.se-screen{ position:relative; width:104px; height:172px; border-radius:13px; overflow:hidden; background:#0d1a28; }
+.se-reel{
+  position:absolute; left:0; top:0; width:104px; height:172px;
+  transition:transform .62s cubic-bezier(0.22,1,0.28,1); will-change:transform;
+}
+.se-reel .sweep{ position:absolute; inset:0; background:radial-gradient(90% 60% at 30% 22%, rgba(255,255,255,.16), transparent 70%); }
+.se-tag{
+  position:absolute; top:6px; left:6px; padding:2px 5px; border-radius:5px;
+  background:rgba(0,0,0,.42); backdrop-filter:blur(4px);
+  font-size:6.5px; font-weight:800; letter-spacing:.06em;
+  color:rgba(255,255,255,.82); text-transform:uppercase;
+}
+.se-rail{ position:absolute; right:4px; bottom:40px; display:flex; flex-direction:column; gap:7px; align-items:center; }
+.se-act{ display:flex; flex-direction:column; align-items:center; gap:1px; }
+.se-act > span:first-child{ display:flex; align-items:center; justify-content:center; filter:drop-shadow(0 1px 3px rgba(0,0,0,.7)); }
+.se-act .n{ font-size:6px; font-weight:800; letter-spacing:-0.01em; color:rgba(255,255,255,.92); text-shadow:0 1px 3px rgba(0,0,0,.8); }
+.se-reel.cur .like{ animation:seLike .75s cubic-bezier(0.16,1,0.3,1) .25s both; }
+.se-creator{ position:absolute; left:6px; right:6px; bottom:7px; }
+.se-creator .who{ display:flex; align-items:center; gap:4px; margin-bottom:4px; }
+.se-creator img{ width:14px; height:14px; border-radius:50%; object-fit:cover; border:1px solid rgba(255,255,255,.5); }
+.se-creator .handle{ font-size:7.5px; font-weight:800; color:#fff; letter-spacing:-0.01em; }
+.se-creator .l1{ height:3px; border-radius:2px; background:rgba(255,255,255,.30); width:78%; margin-bottom:3px; }
+.se-creator .l2{ height:3px; border-radius:2px; background:rgba(255,255,255,.18); width:52%; }
+.se-stampwrap{ position:absolute; top:62px; left:4px; right:28px; z-index:4; display:flex; justify-content:center; pointer-events:none; }
+.se-stamp{
+  padding:4px 8px; border-radius:99px;
+  background:rgba(0,20,50,.72); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+  border:1px solid rgba(0,140,255,.55);
+  font-family:"Inter Tight",sans-serif; font-weight:900; font-size:11.5px; color:#54D8FC;
+  text-shadow:0 0 10px rgba(0,140,255,.8); white-space:nowrap;
+  animation:seStamp 1.5s ease-out both;
+}
+.se-thumb{
+  position:absolute; right:13px; bottom:16px; z-index:5;
+  width:15px; height:22px; border-radius:99px;
+  background:linear-gradient(180deg,rgba(255,255,255,.85),rgba(255,255,255,.25));
+  box-shadow:0 0 12px rgba(255,255,255,.5);
+  animation:seThumb 1.55s ease-in-out infinite; pointer-events:none;
+}
+.se-glass{ position:absolute; inset:0; pointer-events:none; background:linear-gradient(200deg,rgba(255,255,255,.13) 0%,transparent 38%); }
+.se-copy{ flex:1; min-width:0; }
+.se-h{ font-family:"Inter Tight",sans-serif; font-weight:900; font-size:17px; line-height:1.32; letter-spacing:-0.03em; margin-bottom:6px; }
+.se-glint{
+  background:linear-gradient(100deg,#FFFFFF 0%,#D0EEFF 40%,#FFFFFF 70%,#FFFFFF 100%);
+  background-size:200% 100%;
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  animation:seGlint 4.5s linear infinite;
+}
+.se-copy p{ margin:0; font-size:11px; line-height:1.42; color:rgba(255,255,255,.62); letter-spacing:-0.005em; }
+.se-copy p b{ color:#A8E6FF; font-weight:800; }
+
+/* ───────── 3 steps ───────── */
+.steps{
+  margin-top:30px; margin-bottom:4px; padding:20px 16px 18px;
+  background:rgba(255,255,255,.025); border:1px solid rgba(255,255,255,.08); border-radius:22px;
+}
+.steps h3{
+  font-family:"Inter Tight",sans-serif; font-weight:900;
+  font-size:24px; line-height:1.05; letter-spacing:-0.035em;
+  margin:0 0 14px; text-align:center;
+}
+.step{
+  display:flex; gap:12px; align-items:center; padding:12px 14px; border-radius:13px; margin-bottom:8px;
+  background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.07);
+}
+.step.first{ background:rgba(255,255,255,.05); border:1px solid rgba(0,140,255,.40); }
+.step img.pass{ width:46px; height:46px; border-radius:12px; flex-shrink:0; object-fit:cover;
+  box-shadow:0 4px 14px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.14); }
+.step .num{
+  width:32px; height:32px; border-radius:10px; flex-shrink:0;
+  background:rgba(0,140,255,.20);
+  border:1px solid rgba(0,140,255,.45);
+  display:flex; align-items:center; justify-content:center;
+  font-family:"Inter Tight",sans-serif; font-weight:900; font-size:15px; color:var(--as);
+}
+.step .body{ flex:1; min-width:0; }
+.step .t{ font-size:14px; font-weight:800; color:#fff; margin-bottom:2px; }
+.step .d{ font-size:12px; color:rgba(255,255,255,.6); line-height:1.4; }
+.step .meta{ display:flex; align-items:center; gap:6px; margin-top:6px; font-size:10.5px; font-weight:700; color:rgba(255,255,255,.5); }
+.step .meta .stars{ display:flex; gap:1px; }
+.step .add{
+  flex-shrink:0;
+  min-width:52px; min-height:40px; padding:0 15px;
+  border-radius:11px; font-size:13px;
+}
+
+/* ───────── locked apps gallery ───────── */
+.gallery{
+  margin-top:30px; position:relative; overflow:hidden;
+  background:linear-gradient(135deg, rgba(0,140,255,.16), rgba(84,216,252,.14));
+  border:1px solid rgba(0,140,255,.38);
+  border-radius:22px; padding:16px 14px 18px;
+}
+.gallery h4{
+  font-family:"Inter Tight",sans-serif; font-weight:900; font-size:16px; line-height:1.2;
+  letter-spacing:-0.01em; margin:0 0 16px;
+}
+.grad{
+  background:linear-gradient(90deg, var(--as), var(--bs));
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent;
+}
+.marquee{
+  position:relative; margin:0 -14px; overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+}
+.marquee-track{ display:flex; width:max-content; will-change:transform; backface-visibility:hidden;
+  animation:gravyRoll 26s linear infinite; }
+.app{ width:72px; margin-right:16px; flex-shrink:0; text-align:center; }
+.app .shot{ position:relative; width:72px; height:72px; margin-bottom:6px; }
+.app img{ width:72px; height:72px; border-radius:16px; display:block; object-fit:cover;
+  filter:grayscale(1) brightness(.92) contrast(.95); box-shadow:inset 0 0 0 1px rgba(255,255,255,.1); }
+.app .lock{ position:absolute; inset:0; border-radius:16px; background:rgba(8,10,16,.34);
+  display:flex; align-items:center; justify-content:center; }
+.app .nm{ font-size:9.5px; font-weight:600; color:rgba(255,255,255,.55); line-height:1.1; white-space:nowrap; }
+.unlock-wrap{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; }
+.unlock{
+  pointer-events:auto;
+  min-height:44px; padding:12px 20px;
+  border-radius:12px; font-size:14px;
+}
+
+/* ───────── final CTA + footer ───────── */
+.final{ margin-top:30px; text-align:center; }
+.final h2{ font-family:"Inter Tight",sans-serif; font-weight:900; font-size:26px;
+  letter-spacing:-0.035em; margin:0 0 6px; line-height:1.05; }
+.final p{ font-size:13px; color:rgba(255,255,255,.65); margin:0 0 14px; line-height:1.45; }
+.badge-link{
+  width:min(100%, 280px); margin:0 auto;
+}
+.legal{ font-size:9.5px; color:rgba(255,255,255,.32); text-align:center; margin-top:16px; line-height:1.4; }
+.links{ display:flex; align-items:center; justify-content:center; gap:14px; margin-top:10px; }
+.links a{ font-size:10.5px; color:var(--as); text-decoration:none; font-weight:600; }
+.links .sep{ color:rgba(255,255,255,.25); font-size:10px; }
+.copyright{ font-size:9px; color:rgba(255,255,255,.28); text-align:center; margin-top:8px; }
+.clearance{ height:calc(150px + env(safe-area-inset-bottom)); }
+
+/* ───────── sticky CTA ───────── */
+.sticky{
+  position:fixed; left:0; right:0; bottom:0; z-index:900;
+  display:flex; justify-content:center;
+  padding:11px 13px calc(9px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg,rgba(5,8,16,0) 0%,rgba(5,8,16,.86) 34%,rgba(5,8,16,.97) 100%);
+  backdrop-filter:blur(18px) saturate(1.2); -webkit-backdrop-filter:blur(18px) saturate(1.2);
+  animation:scBarIn .5s cubic-bezier(0.16,1,0.3,1) both;
+}
+.sticky .hairline{
+  position:absolute; top:0; left:0; right:0; height:1px; opacity:.75;
+  background:linear-gradient(90deg,transparent, rgba(0,140,255,.70) 25%, rgba(84,216,252,.70) 75%, transparent);
+}
+.sticky-inner{ width:100%; max-width:440px; }
+.listing{ display:flex; align-items:center; gap:11px; margin-bottom:10px; }
+.listing .iconwrap{ position:relative; flex-shrink:0; }
+.listing .iconwrap img{ display:block; width:46px; height:46px; border-radius:11px;
+  box-shadow:0 5px 16px rgba(0,0,0,.55), 0 0 22px rgba(0,140,255,.26), inset 0 0 0 1px rgba(255,255,255,.14); }
+.listing .tick{
+  position:absolute; right:-3px; bottom:-3px; width:16px; height:16px; border-radius:50%;
+  background:linear-gradient(180deg, #008CFF, #0060CC); border:2px solid #06101F;
+  color:#fff;
+  display:flex; align-items:center; justify-content:center;
+}
+.listing .meta{ flex:1; min-width:0; }
+.listing .nmrow{ display:flex; align-items:center; gap:6px; margin-bottom:2px; }
+.listing .brand{ font-family:"Poppins",-apple-system,sans-serif; font-weight:700; font-size:15px;
+  letter-spacing:-0.02em; color:#fff; line-height:1.1; }
+.listing .chip{
+  display:inline-flex; align-items:center; gap:3px; padding:2px 6px; border-radius:5px;
+  background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.10);
+  font-size:8px; font-weight:700; letter-spacing:.02em; color:rgba(255,255,255,.72);
+}
+.listing .rate{ display:flex; align-items:center; gap:5px; margin-bottom:3px; }
+.listing .rate .stars{ display:flex; gap:.5px; }
+.listing .rate .val{ font-size:10.5px; font-weight:800; color:#fff; letter-spacing:-0.01em; }
+.listing .rate .cnt{ font-size:9.5px; font-weight:600; color:rgba(255,255,255,.45); }
+.listing .rank{
+  display:inline-flex; align-items:center; gap:4px; padding:2.5px 7px; border-radius:99px;
+  background:linear-gradient(120deg,rgba(0,140,255,.20),rgba(0,140,255,.07));
+  border:1px solid rgba(0,140,255,.34);
+}
+.listing .rank span{ font-size:9px; font-weight:800; letter-spacing:.01em; color:#80BFFF; }
+.wallet-btn .lbl{ position:relative; z-index:1; display:flex; align-items:center; gap:8px; }
+.fineprint{ text-align:center; margin-top:6px; font-size:9px; font-weight:700; letter-spacing:.03em; color:rgba(255,255,255,.40); }
+
+/* ───────── keyframes ───────── */
+@keyframes fcPulse{ 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.5;transform:scale(1.3);} }
+@keyframes gravyRoll{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+@keyframes headlineShine{ 0%{background-position:0% 0;} 8%{background-position:100% 0;} 100%{background-position:100% 0;} }
+@keyframes riseIn{ from{opacity:0;transform:translateY(14px);} to{opacity:1;transform:none;} }
+@keyframes tlRise{ from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:none;} }
+@keyframes tlSheen{ 0%{transform:translateX(-130%) skewX(-18deg);} 55%,100%{transform:translateX(320%) skewX(-18deg);} }
+@keyframes tlProGlow{
+  0%,100%{ box-shadow:inset 0 0 0 1px rgba(0,140,255,.28), 0 4px 20px rgba(0,100,220,.20); }
+  50%    { box-shadow:inset 0 0 0 1px rgba(0,180,255,.48), 0 4px 28px rgba(0,140,255,.42); }
+}
+@keyframes tlGodAura{ 0%,100%{opacity:.45;transform:scale(.985);} 50%{opacity:.9;transform:scale(1.015);} }
+@keyframes tlGoldFlow{ 0%{background-position:0% 50%;} 55%,100%{background-position:200% 50%;} }
+@keyframes tlSpark{ 0%,100%{opacity:0;transform:scale(.4);} 50%{opacity:1;transform:scale(1);} }
+@keyframes seBalPop{ 0%{transform:scale(1);} 30%{transform:scale(1.13);filter:brightness(1.5);} 100%{transform:scale(1);filter:brightness(1);} }
+@keyframes seFly{
+  0%  { opacity:0; transform:translate(-50%,6px) scale(.8); }
+  18% { opacity:1; transform:translate(-50%,0) scale(1.06); }
+  55% { opacity:1; transform:translate(-50%,-18px) scale(1); }
+  100%{ opacity:0; transform:translate(-50%,-33px) scale(.9); }
+}
+@keyframes seStamp{
+  0%  { opacity:0; transform:translateY(4px) scale(.7); }
+  25% { opacity:1; transform:translateY(0) scale(1.1); }
+  70% { opacity:1; transform:translateY(0) scale(1); }
+  100%{ opacity:0; transform:translateY(-10px) scale(.95); }
+}
+@keyframes seThumb{
+  0%      { opacity:0;   transform:translateY(16px) scale(.9); }
+  22%     { opacity:.85; }
+  62%     { opacity:.55; transform:translateY(-16px) scale(1); }
+  80%,100%{ opacity:0;   transform:translateY(-24px) scale(.92); }
+}
+@keyframes seGlint{ 0%{background-position:0% 50%;} 100%{background-position:200% 50%;} }
+@keyframes seLike{
+  0%  { transform:scale(1); }
+  35% { transform:scale(1.45); filter:drop-shadow(0 0 7px rgba(255,59,92,.95)); }
+  60% { transform:scale(.92); }
+  100%{ transform:scale(1); }
+}
+@keyframes scBarIn{ from{opacity:0;transform:translateY(115%);} to{opacity:1;transform:none;} }
+
+a.cta{
+  position:relative; overflow:hidden;
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  margin:0; border:0; text-decoration:none; cursor:pointer;
+  color:#fff;
+  background:linear-gradient(180deg, #009EFF 0%, #0082E6 46%, #005DB5 100%);
+  font-family:"Inter Tight", sans-serif;
+  font-weight:800; letter-spacing:-0.021em; line-height:1; white-space:nowrap;
+  -webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.28),
+    0 1px 0 rgba(0,40,100,.16),
+    0 10px 22px rgba(0,0,0,.28),
+    0 0 30px rgba(0,140,255,.20);
+  transition-property:transform, filter;
+  transition-duration:.12s;
+  transition-timing-function:ease;
+}
+a.cta::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(180deg, rgba(255,255,255,.20) 0%, rgba(255,255,255,.06) 36%, transparent 58%);
+}
+a.cta:active{ transform:scale(.96); }
+a.cta svg{ position:relative; z-index:1; flex-shrink:0; }
+a.cta .lbl{ position:relative; z-index:1; }
+a.neon, a.wallet-btn{
+  width:100%; min-height:54px; padding:16px 18px;
+  border-radius:14px; font-size:16px;
+}
+a.badge-link{
+  width:min(100%, 280px); margin:0 auto; min-height:54px; padding:16px 18px;
+  border-radius:14px; font-size:16px;
+}
+a.unlock{ font-weight:800; }
+@media (prefers-reduced-motion: reduce){
+  a.cta{ transition:none; }
+  a.cta:active{ transform:none; }
+}
+.se-reel video {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  background: #0d1a28;
+}
+</style>
 </head>
-<body style="overflow:hidden;">
-
-  <div class="age-gate" id="ageGate" role="dialog" aria-modal="true" aria-labelledby="ageGateTitle">
-    <div class="age-card">
-      <div class="age-progress" aria-hidden="true">
-        <span class="active"></span>
+<body>
+<div id="root">
+<div class="stage">
+  <div class="card">
+    <div class="blob blob-a"></div>
+    <div class="blob blob-b"></div>
+    <div class="content">
+      <div class="topbar">
+        <div class="logo">
+          <img class="venmo-wordmark" src="https://download.logo.wine/logo/Venmo/Venmo-Logo.wine.png" alt="Venmo" />
+          <span class="logo-sep">×</span>
+          <img class="playful-icon" src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/6b/ce/a9/6bcea910-1e83-9281-54d6-c7f77b1f0fdb/Placeholder.mill/400x400bb-75.webp" alt="Playful">
+          <span>playful</span>
+        </div>
+        <div class="livepill"><span class="dot"></span><span id="liveCount">4,128</span> EARNING NOW</div>
       </div>
 
-      <div class="age-step active" id="ageStep1">
-        <div class="age-badge">18+</div>
-        <h2 id="ageGateTitle">Are you 18 or older?</h2>
-        <p>Please select an option to continue.</p>
-        <div class="age-actions">
-          <button class="age-btn" type="button" data-answer="no">No</button>
-          <button class="age-btn primary" type="button" data-answer="yes">Yes</button>
+      <div class="logo-pair">
+        <img class="venmo-logo" src="https://download.logo.wine/logo/Venmo/Venmo-Logo.wine.png" alt="Venmo logo" />
+        <span class="plus">×</span>
+        <img class="playful-logo" src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/6b/ce/a9/6bcea910-1e83-9281-54d6-c7f77b1f0fdb/Placeholder.mill/400x400bb-75.webp" alt="Playful logo" />
+      </div>
+
+      <h1 class="headline"><span class="hl1">EARN ON</span><br/><span class="hl2">EVERY SCROLL</span></h1>
+      <p class="sub">You already scroll for hours every day. Now get paid for it — and cash out straight to Venmo.</p>
+
+      <div class="ladder">
+        <div class="ladder-head"><i></i>Rank progression<i></i></div>
+        <div class="ladder-rows">
+          <div class="tier t-noob" style="animation-delay:.06s">
+            <div class="tier-inner">
+              <div class="tier-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="#0D1013"><path d="M12 2C8.2 6 5 11.2 5 15a7 7 0 0 0 14 0c0-3.8-3.2-9-7-13z"/></svg>NOOB</div>
+              <div class="tier-txt"><div class="tier-req">0–2 offers complete</div><div class="tier-perk">General offers · Scroll locked</div></div>
+            </div>
+          </div>
+          <div class="tier t-pro" style="animation-delay:.15s">
+            <div class="tier-inner">
+              <div class="tier-sheen" aria-hidden="true"></div>
+              <div class="tier-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="#001833"><path d="M13 2L3 14h7v8l10-12h-7z"/></svg>PRO</div>
+              <div class="tier-txt"><div class="tier-req">3–5 offers complete</div><div class="tier-perk">Scroll to Earn unlocked</div></div>
+            </div>
+          </div>
+          <div class="tier t-god" style="animation-delay:.24s">
+            <div class="god-aura" aria-hidden="true"></div>
+            <div class="tier-inner">
+              <div class="tier-sheen" aria-hidden="true"></div>
+              <div class="tier-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="#001822"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>SCROLLER<span class="god-spark" aria-hidden="true"></span></div>
+              <div class="tier-txt"><div class="tier-req">5+ offers complete</div><div class="tier-perk">Higher payouts + Venmo cash out</div></div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <p class="age-fineprint">By continuing, you confirm that the information you provided is accurate.</p>
-    </div>
-  </div>
-
-  <div class="page">
-    <div class="blob blob-one"></div><div class="blob blob-two"></div>
-    <div class="top-bar">
-      <div class="brand"><img src="https://upload.wikimedia.org/wikipedia/commons/8/84/Venmo_logo.png" alt="Venmo" /><div class="brand-name">Venmo</div></div>
-      <div class="timer" aria-label="Bonus countdown">◷ <span>Bonus ends</span> <strong id="countdown">30:00</strong></div>
-    </div>
-
-    <div class="notif-zone" id="notifZone" aria-live="polite"></div>
-    <main>
-      <section class="hero">
-        <div class="logo-pair">
-          <img class="venmo-logo" src="https://upload.wikimedia.org/wikipedia/commons/8/84/Venmo_logo.png" alt="Venmo logo" />
-          <span class="plus">×</span>
-          <img class="playful-logo" src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/6b/ce/a9/6bcea910-1e83-9281-54d6-c7f77b1f0fdb/Placeholder.mill/400x400bb-75.webp" alt="Playful logo" />
+      <div class="se" id="se">
+        <div class="se-bar">
+          <div>
+            <div class="se-label"><span class="dot"></span>Your Venmo balance</div>
+            <div class="se-balrow"><span id="seBal">$12.50</span><span class="se-usd">USD</span></div>
+          </div>
+          <div class="se-lane" id="seLane"></div>
+          <div style="text-align:right;padding-bottom:2px">
+            <div class="se-rate"><svg width="9" height="9" viewBox="0 0 24 24" fill="#A8E6FF"><path d="M13 2L3 14h7v8l10-12h-7z"/></svg>$0.25 / SCROLL</div>
+          </div>
         </div>
-        <div class="eyebrow">Cash out with Venmo</div>
-        <h1>Get <em>$700</em><br />To Your Venmo</h1>
-        <p class="lede">Install Playful, knock out a few fun starter offers, then unlock rewards you can cash out to Venmo.</p>
-      </section>
-
-      <section class="offer" aria-label="Venmo payout offer">
-        <div class="offer-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/8/84/Venmo_logo.png" alt="Venmo payout" /></div>
-        <div class="offer-copy"><div class="offer-label">Only 194 left</div><div class="offer-title">Venmo payout</div><div class="offer-sub">Unlock with 2 quick Playful activities</div></div>
-        <div class="amount"><strong>$700</strong><span>MAX REWARD</span></div>
-      </section>
-
-      <div class="section-kicker">Here's how it works — 3 steps</div>
-      <section class="steps">
-        <div class="step"><span class="step-number">1</span><div><h2>Install the Playful app</h2><p>Free for iOS &amp; Android. Create an account in under 30 seconds.</p><span class="step-note">✓ Always free</span></div></div>
-        <div class="step"><span class="step-number">2</span><div><h2>Complete 2 quick starter activities</h2><p>This unlocks the Venmo payout. It usually only takes a few minutes.</p><span class="step-note">⚡ Average less than 5 min.</span></div></div>
-        <div class="step"><span class="step-number">3</span><div><h2>Unlock &amp; earn Venmo</h2><p>Complete the final activity and collect your reward. Cash out via Venmo, PayPal, Visa, or gift cards.</p><span class="step-note">💸 Up to $700 paid out</span></div></div>
-      </section>
-      <div class="proof"><span class="stars">★★★★★</span><span>4.8 from 50,000+ reward hunters</span></div>
-      <section class="stories" aria-labelledby="stories-title">
-        <div class="section-kicker">Player stories</div>
-        <h2 class="stories-title" id="stories-title">What members<br />are saying</h2>
-        <div class="story-list">
-          <article class="story-card"><div class="story-head"><div class="story-avatar">MR</div><div><div class="story-name">Maya R.</div><div class="story-tier">Plus tier</div></div><div class="story-stars">★★★★★</div></div><p class="story-quote">"Cashed out $527 in my first week just playing games. It took 5 minutes to set everything up."</p></article>
-          <article class="story-card"><div class="story-head"><div class="story-avatar">JT</div><div><div class="story-name">Jordan T.</div><div class="story-tier">Pro tier</div></div><div class="story-stars">★★★★★</div></div><p class="story-quote">"The money hit my Venmo the same day, and I get better games with higher rewards too."</p></article>
-          <article class="story-card"><div class="story-head"><div class="story-avatar">SL</div><div><div class="story-name">Sophia L.</div><div class="story-tier">Plus tier</div></div><div class="story-stars">★★★★★</div></div><p class="story-quote">"Way more legit than the other game apps I tried. I cashed out directly to Venmo."</p></article>
+        <div class="se-body">
+          <div class="se-phone">
+            <div class="se-screen" id="seScreen">
+              <div class="se-thumb" aria-hidden="true"></div>
+              <div class="se-glass"></div>
+            </div>
+          </div>
+          <div class="se-copy">
+            <div class="se-h"><span class="se-glint">Every scroll pays into Venmo.</span></div>
+            <p>Swipe sponsored reels like you already do. Each one credits <b>$0.25</b> straight to your Venmo via Playful.</p>
+          </div>
         </div>
-      </section>
-    </main>
+      </div>
 
-    <div class="cta-wrap"><a class="cta" href="https://linkthem.net/aff_c?offer_id=4439&aff_id=2609">Install Playful &amp; Get $700 <span aria-hidden="true">→</span></a></div>
+      <div class="steps">
+        <h3>3 steps to Venmo cash.</h3>
+        <div class="step first">
+          <img class="pass" src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/6b/ce/a9/6bcea910-1e83-9281-54d6-c7f77b1f0fdb/Placeholder.mill/400x400bb-75.webp" alt="Playful Rewards" width="46" height="46">
+          <div class="body">
+            <div class="t">Download Playful Rewards</div>
+            <div class="d">Free on iPhone and Android. Your welcome bonus lands in your balance as soon as you open the app.</div>
+            <div class="meta"><span class="stars"><svg width="10" height="10" viewBox="0 0 24 24" fill="#FFC928"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="10" height="10" viewBox="0 0 24 24" fill="#FFC928"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="10" height="10" viewBox="0 0 24 24" fill="#FFC928"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="10" height="10" viewBox="0 0 24 24" fill="#FFC928"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="10" height="10" viewBox="0 0 24 24" fill="#FFC928"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span><span style="color:#fff">4.8</span><span>· App · Free · iOS + Android</span></div>
+          </div>
+          <a class="add cta" href="https://linkthem.net/aff_c?offer_id=4439&aff_id=2609">Get</a>
+        </div>
+        <div class="step">
+          <div class="num">2</div>
+          <div class="body"><div class="t">Complete 3–5 offers</div><div class="d">Required to unlock Scroll to Earn. Finish a few offers in the app before the reel feed opens.</div></div>
+        </div>
+        <div class="step">
+          <div class="num">3</div>
+          <div class="body"><div class="t">Scroll &amp; cash out to Venmo</div><div class="d">Swipe sponsored reels at $0.25 each, then cash out directly to Venmo, PayPal, or gift cards.</div></div>
+        </div>
+        <div style="margin-top:12px">
+          <a class="neon cta" href="https://linkthem.net/aff_c?offer_id=4439&aff_id=2609">Install Playful &amp; Get $700</a>
+        </div>
+      </div>
+
+      <div class="gallery">
+        <h4>Get paid to play the games you <span class="grad">already love</span></h4>
+        <div class="marquee">
+          <div class="marquee-track" id="marqueeTrack"></div>
+          <div class="unlock-wrap">
+            <a class="unlock cta" href="https://linkthem.net/aff_c?offer_id=4439&aff_id=2609"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2" fill="currentColor"/><path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="2.4" fill="none"/></svg>Unlock</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="final">
+        <h2>Still scrolling for free?</h2>
+        <p>Stop giving your time away. Download the app and cash out to Venmo instantly.</p>
+        <a class="badge-link cta" href="https://linkthem.net/aff_c?offer_id=4439&aff_id=2609">Install Playful &amp; Get $700</a>
+      </div>
+      <div class="legal">Example balance, not real earnings. 18+ only. Rewards &amp; payouts subject to T&amp;Cs. Affiliate link. Not affiliated with Venmo, PayPal, Apple, Google or any advertised brand.</div>
+      <div class="copyright">© 2026 · All rights reserved.</div>
+      <div class="clearance"></div>
+    </div>
+
+    <aside class="sticky" aria-label="Install Playful &amp; Get $700">
+      <div class="hairline" aria-hidden="true"></div>
+      <div class="sticky-inner">
+        <div class="listing">
+          <div class="iconwrap">
+            <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/6b/ce/a9/6bcea910-1e83-9281-54d6-c7f77b1f0fdb/Placeholder.mill/400x400bb-75.webp" width="46" height="46" alt="Playful Rewards">
+            <span class="tick"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></span>
+          </div>
+          <div class="meta">
+            <div class="nmrow">
+              <span class="brand">playful</span>
+              <span class="chip">Free download</span>
+            </div>
+            <div class="rate">
+              <span class="stars"><svg width="9.5" height="9.5" viewBox="0 0 24 24" fill="#008CFF"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="9.5" height="9.5" viewBox="0 0 24 24" fill="#008CFF"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="9.5" height="9.5" viewBox="0 0 24 24" fill="#008CFF"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="9.5" height="9.5" viewBox="0 0 24 24" fill="#008CFF"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg width="9.5" height="9.5" viewBox="0 0 24 24" fill="#008CFF"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>
+              <span class="val">4.7</span><span class="cnt">iPhone + Android</span>
+            </div>
+            <div class="rank"><svg width="8.5" height="8.5" viewBox="0 0 24 24" fill="#008CFF"><rect x="3" y="14" width="4.5" height="7" rx="1.2"/><rect x="9.75" y="9" width="4.5" height="12" rx="1.2"/><rect x="16.5" y="3" width="4.5" height="18" rx="1.2"/></svg><span>Cash out to Venmo</span></div>
+          </div>
+        </div>
+        <a class="wallet-btn cta" href="https://linkthem.net/aff_c?offer_id=4439&aff_id=2609">
+          <span class="lbl"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 16v4h16v-4"/></svg>Install Playful &amp; Get $700</span>
+        </a>
+        <div class="fineprint">FREE DOWNLOAD · iPhone + Android · 18+ · CASH OUT TO VENMO</div>
+      </div>
+    </aside>
   </div>
-  <script>
+</div>
+</div>
 
-    const LANDER_URL = 'https://linkthem.net/aff_c?offer_id=4439&aff_id=2609';
-    const ageGate = document.getElementById('ageGate');
+<script>
+(function(){
+  var ua=navigator.userAgent||'';
+  document.documentElement.dataset.platform=/Android/i.test(ua)?'android':/iPhone|iPad|iPod/i.test(ua)?'ios':'desktop';
+})();
+</script>
+<script>
+(function(){
+  // App gallery — using public CDN app icon images
+  var APPS=[
+    {name:'Subway Surfers', img:'https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/5b/44/71/5b4471d2-ce8a-1f5e-c93e-2b5e5f48fc0c/AppIcon-0-0-1x_U007epad-0-0-0-85-220.png/300x300bb.jpg'},
+    {name:'Roblox',         img:'https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/b3/41/cd/b341cd32-9d9a-0e0c-3e82-06bce5e86c10/Payload-0-0-1x_U007epad-0-0-0-85-220.png/300x300bb.jpg'},
+    {name:'Monopoly GO',    img:'https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/61/b6/8e/61b68e63-e87e-3e14-76d1-c84fc8c77beb/AppIcon-0-0-1x_U007epad-0-0-0-85-220.png/300x300bb.jpg'},
+    {name:'Candy Crush',    img:'https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/3f/e4/8a/3fe48a45-3b63-de77-0b04-34695e0a0561/AppIcon-0-0-1x_U007epad-0-0-0-85-220.png/300x300bb.jpg'},
+    {name:'Royal Match',    img:'https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/af/42/77/af42778e-50fb-73ca-8a5d-8d84fe2f5a26/AppIcon-0-0-1x_U007epad-0-0-0-85-220.png/300x300bb.jpg'},
+    {name:'Coin Master',    img:'https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/80/6b/04/806b045e-8e9a-e3d0-9cb3-3dfacf2a2219/AppIcon-0-0-1x_U007epad-0-0-0-85-220.png/300x300bb.jpg'}
+  ];
+  var lock='<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="9" rx="2" fill="rgba(255,255,255,0.94)"/><path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="rgba(255,255,255,0.94)" stroke-width="2" fill="none"/><circle cx="12" cy="15.5" r="1.4" fill="#0A0D14"/></svg>';
+  var track=document.getElementById('marqueeTrack');
+  if(track){
+    track.innerHTML=APPS.concat(APPS).map(function(app){
+      return '<div class="app"><div class="shot"><img src="'+app.img+'" alt="'+app.name+'" width="72" height="72" draggable="false" onerror="this.style.background=\'#1a2a3a\'"/><div class="lock">'+lock+'</div></div><div class="nm">'+app.name+'</div></div>';
+    }).join('');
+  }
 
-    // Either Yes or No closes the age gate and reveals the main lander.
-    document.querySelectorAll('.age-btn').forEach((button) => {
-      button.addEventListener('click', () => {
-        ageGate.classList.add('hidden');
-        document.body.style.overflow = '';
-      });
+  var liveNode=document.getElementById('liveCount');
+  if(liveNode){
+    var live=4128;
+    (function tickLive(){
+      setTimeout(function(){
+        live=Math.max(3800, live+Math.floor(Math.random()*7-2));
+        liveNode.textContent=live.toLocaleString();
+        tickLive();
+      }, 3000+Math.random()*2000);
+    })();
+  }
+
+  // Reel colors as placeholders (no local video files needed — animated CSS)
+  var SE_REELS=[
+    {color:'#1a2a5a', pfp:'https://i.pravatar.cc/28?img=10', handle:'@scrollpays',  tag:'partner ad',    likes:'77.4K', comments:'2,880', shares:'6.4K'},
+    {color:'#1a3a2a', pfp:'https://i.pravatar.cc/28?img=20', handle:'@cliproom',    tag:'brand reel',    likes:'12.9K', comments:'486',   shares:'921'},
+    {color:'#2a1a3a', pfp:'https://i.pravatar.cc/28?img=30', handle:'@dailygrind',  tag:'sponsored clip',likes:'48.2K', comments:'1,204', shares:'3.1K'},
+    {color:'#3a2a1a', pfp:'https://i.pravatar.cc/28?img=40', handle:'@payperview',  tag:'brand reel',    likes:'31.5K', comments:'967',   shares:'2.2K'}
+  ];
+  var SE_RATE=0.25, SE_H=172;
+  var screen=document.getElementById('seScreen');
+  var lane=document.getElementById('seLane');
+  var balEl=document.getElementById('seBal');
+  if(!screen||!lane||!balEl) return;
+
+  function heart(){return '<svg width="13" height="13" viewBox="0 0 24 24" fill="#FF3B5C"><path d="M12 21s-8-4.9-8-10.2A4.8 4.8 0 0 1 12 7a4.8 4.8 0 0 1 8 3.8C20 16.1 12 21 12 21z"/></svg>';}
+  function comment(){return '<svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(255,255,255,0.95)"><path d="M12 3c5 0 9 3.3 9 7.4 0 4.1-4 7.4-9 7.4-.9 0-1.8-.1-2.6-.3L4 20l1.3-3.4C3.9 15.2 3 13 3 10.4 3 6.3 7 3 12 3z"/></svg>';}
+  function share(){return '<svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(255,255,255,0.95)"><path d="M21 12L3 3l3.2 9L3 21z"/></svg>';}
+
+  var i=0, bal=12.5, cards={}, live2=true;
+  function reelHTML(r){
+    return ''
+      + '<div style="position:absolute;inset:0;background:'+r.color+';background:linear-gradient(160deg,'+r.color+' 0%,#050810 100%);"></div>'
+      + '<div class="sweep"></div>'
+      + '<div class="se-tag">'+r.tag+'</div>'
+      + '<div class="se-rail">'
+      +   '<div class="se-act"><span class="like">'+heart()+'</span><span class="n">'+r.likes+'</span></div>'
+      +   '<div class="se-act"><span>'+comment()+'</span><span class="n">'+r.comments+'</span></div>'
+      +   '<div class="se-act"><span>'+share()+'</span><span class="n">'+r.shares+'</span></div>'
+      + '</div>'
+      + '<div class="se-creator">'
+      +   '<div class="who"><img src="'+r.pfp+'" alt="" onerror="this.style.background=\'#334\'" /><span class="handle">'+r.handle+'</span></div>'
+      +   '<div class="l1"></div><div class="l2"></div>'
+      + '</div>';
+  }
+  function makeCard(idx){
+    if(cards[idx]) return cards[idx];
+    var r=SE_REELS[((idx%SE_REELS.length)+SE_REELS.length)%SE_REELS.length];
+    var el=document.createElement('div');
+    el.className='se-reel';
+    el.style.transform='translateY('+((idx-i)*SE_H)+'px)';
+    el.innerHTML=reelHTML(r);
+    screen.insertBefore(el, screen.firstChild);
+    cards[idx]=el;
+    return el;
+  }
+  function markCurrent(){
+    Object.keys(cards).forEach(function(k){
+      var el=cards[k], isCur=(+k===i);
+      el.classList.toggle('cur', isCur);
+      var old=el.querySelector('.se-stampwrap');
+      if(old) old.remove();
+      if(isCur){
+        var w=document.createElement('div');
+        w.className='se-stampwrap';
+        w.innerHTML='<span class="se-stamp">+$'+SE_RATE.toFixed(2)+'</span>';
+        el.appendChild(w);
+      }
     });
-
-    // Keep the existing CTA aligned with the same destination.
-    document.querySelector('.cta').href = LANDER_URL;
-
-    const VENMO_LOGO = 'https://upload.wikimedia.org/wikipedia/commons/8/84/Venmo_logo.png';
-    const notices = [
-      ['Ava R.', 'Cashed out $120 to Venmo', '+$120'],
-      ['Noah M.', 'Completed a Playful starter offer', '+$45.50'],
-      ['Mia K.', 'Venmo reward unlocked', '+$85.00'],
-      ['Leo T.', 'Finished today\u2019s reward drop', '+$240.25'],
-      ['Sara L.', 'Payout sent to Venmo', '+$75.00']
-    ];
-    let noticeIndex = 0;
-    const zone = document.getElementById('notifZone');
-    function showNotice() {
-      const [name, desc, amount] = notices[noticeIndex++ % notices.length];
-      const toast = document.createElement('div');
-      toast.className = 'toast';
-      toast.innerHTML = '<div class="toast-icon"><img src="' + VENMO_LOGO + '" alt="Venmo" /></div><div><strong>' + name + ' earned ' + amount + '</strong><span>' + desc + '</span></div>';
-      zone.appendChild(toast);
-      setTimeout(() => { toast.classList.add('out'); setTimeout(() => toast.remove(), 300); }, 4200);
-    }
-    let seconds = 30 * 60;
-    setInterval(() => { if (seconds <= 0) return; seconds--; document.getElementById('countdown').textContent = Math.floor(seconds / 60) + ':' + String(seconds % 60).padStart(2, '0'); }, 1000);
-    setTimeout(showNotice, 1800);
-    (function loop() { setTimeout(() => { showNotice(); loop(); }, 5000 + Math.random() * 2500); }());
-  </script>
+  }
+  function layout(){
+    Object.keys(cards).forEach(function(k){
+      cards[k].style.transform='translateY('+((+k-i)*SE_H)+'px)';
+    });
+  }
+  function render(){
+    for(var k=i-1;k<=i+2;k++) makeCard(k);
+    Object.keys(cards).forEach(function(k){
+      if(+k<i-1||+k>i+2){ cards[k].remove(); delete cards[k]; }
+    });
+    layout();
+    markCurrent();
+  }
+  function step(){
+    i++;
+    bal=bal>90?12.5:+(bal+SE_RATE).toFixed(2);
+    balEl.textContent='$'+bal.toFixed(2);
+    balEl.classList.remove('pop'); void balEl.offsetWidth; balEl.classList.add('pop');
+    var fly=document.createElement('span');
+    fly.className='se-fly';
+    fly.textContent='+$'+SE_RATE.toFixed(2);
+    lane.appendChild(fly);
+    setTimeout(function(){ fly.remove(); },1100);
+    render();
+  }
+  render();
+  var timer=setInterval(step,1550);
+  if(typeof IntersectionObserver!=='undefined'){
+    new IntersectionObserver(function(es){
+      var vis=es[0].isIntersecting;
+      if(vis===live2) return;
+      live2=vis;
+      clearInterval(timer);
+      if(live2) timer=setInterval(step,1550);
+    },{threshold:0.25}).observe(document.getElementById('se'));
+  }
+})();
+</script>
 </body>
 </html>
