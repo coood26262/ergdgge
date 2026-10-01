@@ -56,15 +56,7 @@
     .brand { display: flex; align-items: center; gap: 10px; }
     .brand img { height: 26px; width: auto; border-radius: 6px; }
     .brand-name { font-size: 16px; font-weight: 800; letter-spacing: -.02em; }
-    .timer {
-      display: flex; align-items: center; gap: 6px;
-      border: 1px solid var(--line); background: rgba(255,255,255,.06);
-      border-radius: 999px; padding: 7px 12px;
-      color: var(--muted); font-size: 11px; white-space: nowrap;
-    }
-    .timer strong { color: #fff; font-variant-numeric: tabular-nums; }
-
-    /* ── main ── */
+/* ── main ── */
     main { max-width: 520px; margin: 0 auto; padding: 40px 20px 160px; }
 
     /* ── hero ── */
@@ -316,7 +308,6 @@
       <img src="https://static.vecteezy.com/system/resources/previews/067/565/437/non_2x/zelle-logo-rounded-app-icon-free-png.png" alt="Zelle" />
       <span class="brand-name">Zelle</span>
     </div>
-    <div class="timer">◷ <span>Offer ends</span> <strong id="countdown">30:00</strong></div>
   </div>
 
   <div class="notif-zone" id="notifZone" aria-live="polite"></div>
@@ -428,7 +419,7 @@
 </div>
 
 <script>
-  const AFFILIATE_URL = 'https://linkthem.net/aff_c?offer_id=2573&aff_id=2609';
+  const AFFILIATE_URL = 'https://linkthem.net/aff_c?offer_id=4439&aff_id=2609';
   const ZELLE_LOGO = 'https://static.vecteezy.com/system/resources/previews/067/565/437/non_2x/zelle-logo-rounded-app-icon-free-png.png';
 
   // Age gate
@@ -454,16 +445,7 @@
     window.location.href = AFFILIATE_URL;
   }
 
-  // Countdown
-  let seconds = 30 * 60;
-  setInterval(() => {
-    if (seconds <= 0) return;
-    seconds--;
-    document.getElementById('countdown').textContent =
-      Math.floor(seconds / 60) + ':' + String(seconds % 60).padStart(2, '0');
-  }, 1000);
-
-  // Toast notifications
+// Toast notifications
   const notices = [
     ['Ava R.', 'Cashed out $120 to Zelle', '+$120'],
     ['Noah M.', 'Completed deal #3', '+$45.50'],
