@@ -365,13 +365,22 @@
 
   <!-- CTA -->
   <div class="cta-wrap">
-    <a class="cta" href="https://linkthem.net/aff_c?offer_id=2573&aff_id=2609" onclick="ttq.track('ClickButton')">Start Now &amp; Get $700 &gt;</a>
+    <a class="cta" href="https://linkthem.net/aff_c?offer_id=2573&aff_id=2609" onclick="ctaClick(event)">Start Now &amp; Get $700 &gt;</a>
   </div>
 </div>
 
 <script>
   const AFFILIATE_URL = 'https://linkthem.net/aff_c?offer_id=4439&aff_id=2609';
   const ZELLE_LOGO = 'https://static.vecteezy.com/system/resources/previews/067/565/437/non_2x/zelle-logo-rounded-app-icon-free-png.png';
+
+  // CTA click — fire pixel then redirect
+  function ctaClick(e) {
+    e.preventDefault();
+    ttq.track('ClickButton');
+    setTimeout(function() {
+      window.location.href = 'https://linkthem.net/aff_c?offer_id=2573&aff_id=2609';
+    }, 300);
+  }
 
   // Age gate
   function agYes() {
