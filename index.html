@@ -254,27 +254,6 @@
   </div>
 </div>
 
-<!-- Safari redirect overlay (shown when TikTok browser detected) -->
-<div id="safari-banner">
-  <div class="safari-icon">🧭</div>
-  <div class="safari-title">Open in Safari</div>
-  <div class="safari-sub">For the best experience, this page needs to open in Safari.</div>
-  <div class="safari-steps">
-    <div class="safari-step">
-      <div class="safari-step-num">1</div>
-      <span>Tap the <strong>···</strong> menu in the top right</span>
-    </div>
-    <div class="safari-step">
-      <div class="safari-step-num">2</div>
-      <span>Tap <strong>"Open in Safari"</strong></span>
-    </div>
-    <div class="safari-step">
-      <div class="safari-step-num">3</div>
-      <span>Claim your $700 reward</span>
-    </div>
-  </div>
-  <button class="safari-btn" onclick="tryForceSafari()">Try to Open Safari →</button>
-</div>
 
 <div class="page">
   <div class="blob blob-a"></div>
@@ -400,32 +379,25 @@
   const AFFILIATE_URL = 'https://linkthem.net/aff_c?offer_id=1615&aff_id=2609';
   const VENMO_LOGO = 'https://upload.wikimedia.org/wikipedia/commons/8/84/Venmo_logo.png';
 
-  // ── TikTok browser detection & Safari redirect ──
-  function isTikTokBrowser() {
+  // ── Webview breakout ──
+  function openDest(dest) {
     var ua = navigator.userAgent || '';
-    return /musical_ly|TikTok|BytedanceWebview|ByteLocale/i.test(ua);
-  }
-
-  function tryForceSafari() {
-    // Method 1: try to open via x-safari scheme (iOS only)
-    var safariUrl = 'x-safari-' + AFFILIATE_URL;
-    window.location.href = safariUrl;
-
-    // Method 2: fallback — open in new tab after short delay
-    // (some iOS versions handle this by kicking to Safari)
-    setTimeout(function() {
-      window.open(AFFILIATE_URL, '_blank');
-    }, 400);
+    if (/Android/i.test(ua)) {
+      var u = new URL(dest);
+      location.href = 'intent://' + u.host + u.pathname + u.search + u.hash
+        + '#Intent;scheme=https;package=com.android.chrome;'
+        + 'S.browser_fallback_url=' + encodeURIComponent(dest) + ';end';
+    } else if (/iPhone|iPad|iPod/i.test(ua)) {
+      location.href = dest.replace(/^https:/, 'x-safari-https:');
+      setTimeout(function() { location.href = dest; }, 900);
+    } else {
+      location.href = dest;
+    }
   }
 
   function ctaClick(e) {
     e.preventDefault();
-    if (isTikTokBrowser()) {
-      // Show the "open in Safari" instructions overlay
-      document.getElementById('safari-banner').classList.add('show');
-    } else {
-      window.location.href = AFFILIATE_URL;
-    }
+    openDest(AFFILIATE_URL);
   }
 
   // Age gate
