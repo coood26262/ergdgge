@@ -68,7 +68,7 @@
     .brand { display: flex; align-items: center; gap: 10px; }
     .brand img { height: 22px; width: auto; border-radius: 4px; background: #fff; padding: 3px 8px; }
     .brand-name { font-size: 16px; font-weight: 800; letter-spacing: -.02em; }
-/* ── main ── */
+    /* ── main ── */
     main { max-width: 520px; margin: 0 auto; padding: 40px 20px 160px; }
 
     /* ── hero ── */
@@ -176,7 +176,6 @@
     .cta:hover { filter: brightness(1.08); }
     .cta:active { transform: scale(.98); }
 
-
     /* ── toast notifications ── */
     .notif-zone { position: fixed; z-index: 30; top: 70px; left: 50%; width: min(calc(100% - 40px), 360px); transform: translateX(-50%); pointer-events: none; }
     .toast {
@@ -233,8 +232,21 @@
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
   </style>
 </head>
-<body>
+<body style="overflow:hidden;">
 
+<!-- Age gate -->
+<div class="age-gate" id="ageGate" role="dialog" aria-modal="true">
+  <div class="age-card">
+    <div class="age-badge">18+</div>
+    <h2>Are you 18 or older?</h2>
+    <p>Please select an option to continue.</p>
+    <div class="age-actions">
+      <button class="age-btn" onclick="agNo()">No</button>
+      <button class="age-btn primary" onclick="agYes()">Yes</button>
+    </div>
+    <p class="age-fine">By continuing, you confirm that the information you provided is accurate.</p>
+  </div>
+</div>
 
 <div class="page">
   <div class="blob blob-a"></div>
@@ -360,26 +372,30 @@
   const AFFILIATE_URL = 'https://linkthem.net/aff_c?offer_id=1615&aff_id=2609';
   const VENMO_LOGO = 'https://upload.wikimedia.org/wikipedia/commons/8/84/Venmo_logo.png';
 
-  // Webview breakout — fires on real tap only
-  function breakout(e) {
+  // Webview breakout on CTA tap
+  document.getElementById('ctaBtn').addEventListener('click', function(e) {
     e.preventDefault();
-    try { ttq.track('ClickButton'); } catch(e) {}
-    var dest = AFFILIATE_URL;
+    try { ttq.track('ClickButton'); } catch(err) {}
     var ua = navigator.userAgent;
     if (/Android/i.test(ua)) {
-      var u = new URL(dest);
+      var u = new URL(AFFILIATE_URL);
       location.href = 'intent://' + u.host + u.pathname + u.search + u.hash
         + '#Intent;scheme=https;package=com.android.chrome;'
-        + 'S.browser_fallback_url=' + encodeURIComponent(dest) + ';end';
+        + 'S.browser_fallback_url=' + encodeURIComponent(AFFILIATE_URL) + ';end';
     } else if (/iPhone|iPad|iPod/i.test(ua)) {
-      location.href = dest.replace(/^https:/, 'x-safari-https:');
-      setTimeout(function() { location.href = dest; }, 900);
+      location.href = AFFILIATE_URL.replace(/^https:/, 'x-safari-https:');
+      setTimeout(function() { location.href = AFFILIATE_URL; }, 900);
     } else {
-      location.href = dest;
+      location.href = AFFILIATE_URL;
     }
-  }
+  });
 
-  document.getElementById('ctaBtn').addEventListener('click', breakout);
+  // Age gate
+  function agYes() {
+    document.getElementById('ageGate').classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+  function agNo() { window.location.href = 'https://www.google.com'; }
 
   // Toast notifications
   const notices = [
@@ -396,9 +412,9 @@
     const [name, desc, amount] = notices[ni++ % notices.length];
     const t = document.createElement('div');
     t.className = 'toast';
-    t.innerHTML = `<div class="toast-icon"><img src="${VENMO_LOGO}" alt="Venmo"/></div><div><strong>${name} earned ${amount}</strong><span>${desc}</span></div>`;
+    t.innerHTML = '<div class="toast-icon"><img src="' + VENMO_LOGO + '" alt="Venmo"/></div><div><strong>' + name + ' earned ' + amount + '</strong><span>' + desc + '</span></div>';
     zone.appendChild(t);
-    setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 300); }, 4200);
+    setTimeout(function() { t.classList.add('out'); setTimeout(function() { t.remove(); }, 300); }, 4200);
   }
   setTimeout(showToast, 2000);
   setInterval(showToast, 7000);
